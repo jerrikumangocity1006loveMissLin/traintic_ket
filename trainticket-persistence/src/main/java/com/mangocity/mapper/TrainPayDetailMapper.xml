@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.TrainPayDetailMapper">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="TrainPayDetail" keyProperty="id">
+		insert
+		into
+		t_train_pay_detail(pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,hb_order_id,create_time)
+		values(
+		#{trainPayId},
+		#{payModel},
+		#{payAmount},
+		#{payNumber},
+		#{status},
+		#{voucherCd},
+		#{integralNum},
+		#{hbOrderId},
+		#{createTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="TrainPayDetail">
+		<selectKey keyProperty="id" resultType="Long">
+			SELECT @@IDENTITY AS
+			id
+		</selectKey>
+		update t_train_pay_detail 
+		<trim suffix="" suffixOverrides=",">
+		  <set>
+		    <if test="trainPayId != null">
+		     pay_id=#{trainPayId},
+		    </if>
+		    <if test="payModel != '' and payModel != null">
+		     pay_mode=#{payModel},
+		    </if>
+		    <if test="payAmount != null">
+		     pay_amount=#{payAmount},
+		    </if>
+		    <if test="payNumber != '' and payNumber != null">
+		     pay_numer=#{payNumber},
+		    </if>
+		    <if test="status != '' and status != null">
+		     status=#{status},
+		    </if>
+		    <if test="voucherCd != '' and voucherCd != null">
+		     voucher_cd=#{voucherCd},
+		    </if>
+		    <if test="integralNum != null">
+		     integral_num=#{integralNum},
+		    </if>
+		    <if test="hbOrderId != null and hbOrderId != ''">
+		      hb_order_id=#{hbOrderId},
+		    </if>
+		    <if test="createTime != null">
+		     create_time=#{createTime},
+		    </if>
+		    <if test="modifyTime != null">
+		     modify_time=#{modifyTime}
+		    </if>
+		  </set>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<select id="find" parameterType="Long" resultMap="payDetailToMap">
+		select id,pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,create_time,modify_time from
+		t_train_pay_detail where id=#{id}
+	</select>
+	
+	<select id="findByPayId" parameterType="Long" resultMap="payDetailToMap">
+		select id,pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,create_time,modify_time from
+		t_train_pay_detail where pay_id=#{payId} 
+		<if test="status != null and status != ''">
+		  and status=#{status}
+		</if>
+	</select>
+	
+	<select id="findByOutTradeNo" parameterType="string" resultMap="payDetailToMap">
+		select id,pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,create_time,modify_time from
+		t_train_pay_detail where pay_numer=#{outTradeNo}
+	</select>
+	
+	<select id="findPayDetailCountByOrderCn" parameterType="string" resultType="string">
+	   select max(e.pay_numer) from t_train_pay_detail e where e.pay_id in (select p.id from t_train_pay p where p.order_cd=#{orderCn})
+	</select>
+	
+	<select id="findPayDetailByOrderId" resultMap="payDetailToMap">
+	   select id,pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,create_time,modify_time 
+	    from t_train_pay_detail d where d.pay_id in
+	   (select p.id from t_train_pay p where p.pay_info_id in 
+	   (select f.id from t_train_pay_info f where f.order_id=#{orderId} and f.type=#{type}))  
+	   <if test="status != '' and status != null">
+		    and  d.status=#{status}
+	   </if>
+	   
+	</select>
+	
+	<select id="findPayDetailByHbOrderId" parameterType="string" resultMap="payDetailToMap">
+		select id,pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,create_time,modify_time,hb_order_id from
+		t_train_pay_detail where hb_order_id=#{hbOrderId}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from t_train_pay_detail
+		where id=#{id}
+	</delete>
+	
+	<select id="pageBySql" resultMap="payDetailToMap" >
+	select id,pay_id,pay_mode,pay_amount,pay_numer,status,voucher_cd,integral_num,create_time from t_train_pay_detail LIMIT #{startNum}, #{pageSize}
+	</select>
+
+	<resultMap type="TrainPayDetail" id="payDetailToMap">
+		<id property="id" column="id" />
+		<result property="trainPayId" column="pay_id" />
+		<result property="payModel" column="pay_mode"/>
+		<result property="payAmount" column="pay_amount" />
+		<result property="payNumber" column="pay_numer" />
+		<result property="status" column="status" />
+		<result property="voucherCd" column="voucher_cd" />
+		<result property="integralNum" column="integral_num" />
+		<result property="createTime" column="create_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="hbOrderId" column="hb_order_id"/>
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.TrainTicketMapper">
+  <resultMap type="Ticket" id="ticketMap">
+     <result property="id" column="id"/>
+     <result property="orderItemId" column="orderItemId"/>
+     <result property="passengerId" column="passengerId"/>
+     <result property="routeType" column="routeType"/>
+     <result property="trainCn" column="trainCn"/>
+     <result property="origStation" column="origStation"/>
+     <result property="destStation" column="destStation"/>
+     <result property="startTime" column="startTime"/>
+     <result property="endTime" column="endTime"/>
+     <result property="trainType" column="trainType"/>
+     <result property="seatType" column="seatType"/>
+     <result property="ticketParentId" column="ticketParentId"/>
+     <result property="salePrice" column="salePrice"/>
+     <result property="fee" column="fee"/>
+     <result property="status" column="status"/>
+     <result property="createTime" column="createTime"/>
+     <result property="updateTime" column="updateTime"/>
+     <result property="hbOrderId" column="hb_order_id"/>
+     <result property="origStationName" column="orig_station_name"/>
+     <result property="destStationName" column="dest_station_name"/>
+     <result property="ticketNo" column="ticket_no"/>
+     <result property="cxin" column="cxin"/>
+     <result property="type" column="type"/>
+     <result property="ccsj" column="ccsj"/>
+     <result property="ddsj" column="ddsj"/>
+     <result property="bookAccount" column="book_account"/>
+     <result property="requestNo" column="request_no"/>
+     <result property="applicantId" column="applicant_id"/>
+     <result property="refundReason" column="refund_reason"/>
+     <result property="refundDesc" column="refund_desc"/>
+     <result property="verifyDesc" column="verify_desc"/>
+     <result property="transactionId" column="transaction_id"/>
+     <result property="orderNumber" column="order_number"/>
+     <result property="hbPrice" column="hb_price"/>
+     <result property="tmcPrice" column="tmc_price"/>
+     <result property="hbSeatType" column="hb_seat_type"/>
+     <result property="operator" column="operator"/>
+  </resultMap>
+  
+  <resultMap type="com.mangocity.vo.TicketInfoVo" id="ticketInfoVoToMap" extends="ticketMap">
+     <result property="passenger.id" column="p_id"/>
+     <result property="passenger.name" column="name"/>
+     <result property="passenger.certType" column="cert_type"/>
+     <result property="passenger.certCn" column="cert_cn"/>
+     <result property="passenger.createTime" column="p_createTime"/>
+     <result property="passenger.mobile" column="mobile"/>
+     <result property="preSalePrice" column="pre_sale_price"/>
+     <result property="preFee" column="pre_fee"/>
+  </resultMap>
+  
+  <resultMap type="com.mangocity.vo.TicketVo" id="ticketVoToMap">
+     <id property="ticket.id" column="t_id"/>
+     <result property="ticket.orderItemId" column="orderItemId"/>
+     <result property="ticket.passengerId" column="passengerId"/>
+     <result property="ticket.routeType" column="routeType"/>
+     <result property="ticket.trainCn" column="trainCn"/>
+     <result property="ticket.origStation" column="origStation"/>
+     <result property="ticket.destStation" column="destStation"/>
+     <result property="ticket.startTime" column="startTime"/>
+     <result property="ticket.endTime" column="endTime"/>
+     <result property="ticket.trainType" column="trainType"/>
+     <result property="ticket.seatType" column="seatType"/>
+     <result property="ticket.ticketParentId" column="ticketParentId"/>
+     <result property="ticket.salePrice" column="salePrice"/>
+     <result property="ticket.fee" column="fee"/>
+     <result property="ticket.status" column="t_status"/>
+     <result property="ticket.createTime" column="t_create_time"/>
+     <result property="ticket.updateTime" column="updateTime"/>
+     <result property="ticket.hbOrderId" column="hb_order_id"/>
+     <result property="ticket.origStationName" column="orig_station_name"/>
+     <result property="ticket.destStationName" column="dest_station_name"/>
+     <result property="ticket.ticketNo" column="ticket_no"/>
+     <result property="ticket.cxin" column="cxin"/>
+     <result property="ticket.type" column="t_type"/>
+     <collection property="insurances" ofType="Insurance">
+        <id property="id" column="ins_id"/>
+	    <result property="ticketId" column="ins_ticket_id"/>
+	    <result property="type" column="ins_type"/>
+	    <result property="num" column="ins_num"/>
+	    <result property="descp" column="ins_descp"/>
+	    <result property="status" column="ins_status"/>
+	    <result property="price" column="ins_price"/>
+	    <result property="createTime" column="ins_create_time"/>
+    </collection>
+  </resultMap>
+  
+  <insert id="save" parameterType="Ticket" keyProperty="id" useGeneratedKeys="true">
+       insert into t_train_ticket(order_item_id,passenger_id,route_type,train_cn,orig_station,dest_station,start_time,end_time,train_type,seat_type,
+        ticket_parent_id,sale_price,fee,status,create_time,hb_order_id,orig_station_name,dest_station_name,ccsj,ddsj,type,ticket_no,book_account,request_no,
+        applicant_id,refund_reason,refund_desc,verify_desc,tmc_price)
+        values
+          (#{orderItemId},#{passengerId},#{routeType},#{trainCn},#{origStation},
+           #{destStation},#{startTime},#{endTime},#{trainType},#{seatType},#{ticketParentId},
+           #{salePrice},#{fee},#{status},#{createTime},#{hbOrderId},#{origStationName},#{destStationName},#{ccsj},
+           #{ddsj},#{type},#{ticketNo},#{bookAccount},#{requestNo},#{applicantId},#{refundReason},#{refundDesc},
+           #{verifyDesc},#{tmcPrice})
+  </insert>
+  
+  <delete id="delete" parameterType="Long">
+       delete from t_train_ticket where id=#{id}
+  </delete>
+  
+  <update id="update" parameterType="Ticket">
+  update t_train_ticket set status =#{status},update_time=#{updateTime},ticket_no=#{ticketNo},cxin=#{cxin}
+      where id=#{id}
+  </update>
+  
+  <update id="updateTicketById" parameterType="Ticket">
+     update t_train_ticket set hb_order_id=#{hbOrderId},`status`=#{status},update_time=#{updateTime}
+      where id=#{id}
+  </update>
+  
+  <update id="updateByHbIdAndPassengerId" parameterType="Ticket">
+      update t_train_ticket set `status`=#{status},update_time=#{updateTime},ticket_no=#{ticketNo},cxin=#{cxin},
+      transaction_id=#{transactionId},order_number=#{orderNumber},hb_price=#{hbPrice},hb_seat_type=#{hbSeatType}
+      where hb_order_id=#{hbOrderId} and passenger_id =#{passengerId}
+  </update>
+  
+  <select id="findTicketByHbIdAndPassengerId" parameterType="Ticket" resultMap="ticketMap">
+      select id,order_item_id orderItemId,route_type routeType,train_cn trainCn,orig_station origStation,
+            dest_station destStation,start_time startTime,end_time endTime,train_type trainType,seat_type seatType,
+            sale_price salePrice,fee,status,hb_order_id,orig_station_name,dest_station_name,type,ticket_no
+            from t_train_ticket where hb_order_id=#{hbOrderId} and passenger_id =#{passengerId}
+  </select>
+  
+  <update id="updateTicket" parameterType="Ticket">
+     update t_train_ticket 
+      <trim suffixOverrides="," suffix="">
+        <set>
+           <if test="null != orderItemId">
+              order_item_id = #{orderItemId},
+           </if>
+           <if test="null != passengerId">
+              passenger_id = #{passengerId},
+           </if>
+           <if test="null != routeType and '' != routeType">
+              route_type = #{routeType},
+           </if>
+           <if test="null != trainCn and '' != trainCn">
+              train_cn = #{trainCn},
+           </if>
+           <if test="null != origStation and '' != origStation">
+              orig_station = #{origStation},
+           </if>
+           <if test="null != destStation and '' != destStation">
+              dest_station = #{destStation},
+           </if>
+           <if test="null != startTime">
+              start_time = #{startTime},
+           </if>
+           <if test="null != endTime">
+              end_time = #{endTime},
+           </if>
+           <if test="null != trainType and '' != trainType">
+              train_type = #{trainType},
+           </if>
+           <if test="null != seatType and '' != seatType">
+              seat_type = #{seatType},
+           </if>
+           <if test="null != ticketParentId">
+              ticket_parent_id = #{ticketParentId},
+           </if>
+           <if test="null != salePrice">
+              sale_price = #{salePrice},
+           </if>
+           <if test="null != fee">
+              fee = #{fee},
+           </if>
+           <if test="null != status and '' != status">
+              status = #{status},
+           </if>
+           <if test="null != createTime">
+              create_time = #{createTime},
+           </if>
+           <if test="null != updateTime">
+              update_time = #{updateTime},
+           </if>
+           <if test="null != hbOrderId and '' != hbOrderId">
+              hb_order_id = #{hbOrderId},
+           </if>
+           <if test="null != origStationName and '' != origStationName">
+              orig_station_name = #{origStationName},
+           </if>
+           <if test="null != destStationName and '' != destStationName">
+              dest_station_name = #{destStationName},
+           </if>
+           <if test="null != ticketNo and '' != ticketNo">
+              ticket_no = #{ticketNo},
+           </if>
+           <if test="null != cxin and '' != cxin">
+              cxin = #{cxin},
+           </if>
+           <if test="null != type and '' != type">
+              type = #{type},
+           </if>
+           <if test="null != requestNo and '' != requestNo">
+              request_no = #{requestNo},
+           </if>
+           <if test="null != applicantId and '' != applicantId">
+              applicant_id = #{applicantId},
+           </if>
+           <if test="null != refundReason and '' != refundReason">
+              refund_reason = #{refundReason},
+           </if>
+           <if test="null != refundDesc and '' != refundDesc">
+              refund_desc = #{refundDesc},
+           </if>
+           <if test="null != verifyDesc and '' != verifyDesc">
+              verify_desc = #{verifyDesc}
+           </if>
+           <if test="null != operator and '' != operator">
+              operator = #{operator}
+           </if>
+        </set>
+      </trim>
+      where id=#{id}
+  </update>
+  
+  <select id="find" resultMap="ticketMap">
+     select id,order_item_id orderItemId,passenger_id passengerId,route_type routeType,train_cn trainCn,orig_station origStation,
+            dest_station destStation,start_time startTime,end_time endTime,train_type trainType,seat_type seatType,
+            ticket_parent_id ticketParentId,sale_price salePrice,fee,status,create_time createTime,update_time updateTime,hb_order_id,orig_station_name,dest_station_name,type,ticket_no,request_no,
+            book_account,applicant_id,refund_reason,refund_desc,verify_desc,transaction_id,order_number,hb_price,tmc_price,hb_seat_type,operator    
+     from t_train_ticket  where id=#{id}
+  </select>
+  
+  <select id="getTrainTicketById" parameterType="Long" resultMap="ticketMap">
+      select id,order_item_id orderItemId,passenger_id passengerId,route_type routeType,train_cn trainCn,orig_station origStation,
+            dest_station destStation,start_time startTime,end_time endTime,train_type trainType,seat_type seatType,
+            ticket_parent_id ticketParentId,sale_price salePrice,fee,status,create_time createTime,update_time updateTime,hb_order_id,orig_station_name,dest_station_name,type,ticket_no,request_no,
+            book_account,applicant_id,refund_reason,refund_desc,verify_desc,transaction_id,order_number,hb_price,tmc_price,hb_seat_type,operator     
+     from t_train_ticket
+     where id=#{id}
+  </select>
+  
+  <select id="findTicketByOrderItemId" resultMap="ticketVoToMap">
+     select t.id t_id,t.order_item_id orderItemId,t.passenger_id passengerId,t.route_type routeType,t.train_cn trainCn,t.orig_station origStation,t.
+            dest_station destStation,t.start_time startTime,t.end_time endTime,t.train_type trainType,t.seat_type seatType,t.ddsj,t.ccsj,t.
+            ticket_parent_id ticketParentId,t.sale_price salePrice,t.fee,t.status t_status,t.create_time t_create_time,t.update_time updateTime,t.hb_order_id,t.orig_station_name,t.dest_station_name,t.type t_type,t.ticket_no,
+            t.book_account,t.request_no,t.applicant_id,t.refund_reason,t.refund_desc,t.verify_desc,t.transaction_id,t.order_number,t.hb_price,t.tmc_price,t.hb_seat_type,t.operator,
+            i.id ins_id,i.ticket_id ins_ticket_id,i.type ins_type,i.num ins_num,i.descp ins_num,i.status ins_status,i.price ins_price,i.create_time ins_create_time 
+      from t_train_ticket t left join t_train_insurance i on t.id=i.ticket_id 
+      where t.order_item_id=#{orderItemId}  
+      <if test="type != null and type != ''">
+		    and t.type =#{type}
+		</if>
+  </select>
+  
+  <select id="findTicketInfoVoByOrderItemId" resultMap="ticketInfoVoToMap">
+     select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.cxin,k.ccsj,k.ddsj,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime,p.mobile,k.tmc_price
+     from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id  
+     where 1=1  
+     <if test="null != orderItemId and '' != orderItemId">
+        and k.order_item_id=#{orderItemId}
+     </if>
+     <if test="null != ticketNo and '' != ticketNo">
+        and k.ticket_no=#{ticketNo}
+     </if>
+  </select>
+  
+  <select id="findTicketInfoVoByTicketId" resultMap="ticketInfoVoToMap">
+     select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.cxin,k.ccsj,k.ddsj,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime,p.mobile
+     from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id  
+     where k.id=#{id}
+     
+  </select>
+  
+  <select id="findTicketByOrderIdOrCd" resultMap="ticketInfoVoToMap">
+    select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.ddsj,k.ccsj,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.cxin,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime,p.mobile 
+          from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id 
+    where k.order_item_id in(
+	        select item.id from t_train_order_item item 
+			left join t_train_order t on t.id=item.order_id
+			where item.goods_type='TICKET' 
+				 <if test="orderId != null and orderId != ''">
+				   and item.order_id=#{orderId}
+				 </if>
+				 <if test="orderCd != null and orderCd != ''">
+				   and t.order_cn=#{orderCd}
+				 </if>
+				 <if test="orderItemId != null and orderItemId != ''">
+				   and item.id=#{orderItemId}
+				 </if>
+			)
+		<if test="type != null and type != ''">
+		    and k.type =#{type}
+		</if>
+  
+  </select>
+  
+  <select id="findRefundTicketByOrderIdOrCd" resultMap="ticketInfoVoToMap">
+    select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.ddsj,k.ccsj,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.cxin,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime,p.mobile,
+            (
+			 select t1.sale_price from t_train_ticket t1 where t1.id=k.ticket_parent_id
+			)as pre_sale_price,
+			(
+			 select t2.fee from t_train_ticket t2 where t2.id=k.ticket_parent_id
+			)as pre_fee  
+          from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id 
+    where k.order_item_id in(
+	        select item.id from t_train_order_item item 
+			left join t_train_order t on t.id=item.order_id
+			where item.goods_type='TICKET' 
+				 <if test="orderId != null and orderId != ''">
+				   and item.order_id=#{orderId}
+				 </if>
+				 <if test="orderCd != null and orderCd != ''">
+				   and t.order_cn=#{orderCd}
+				 </if>
+				 <if test="orderItemId != null and orderItemId != ''">
+				   and item.id=#{orderItemId}
+				 </if>
+			)
+		<if test="type != null and type != ''">
+		    and k.type =#{type}
+		</if>
+  
+  </select>
+  
+  <select id="findCanRefundTicketByOrderId" resultMap="ticketInfoVoToMap">
+    select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.ddsj,k.ccsj,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.cxin,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,
+            k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime,p.mobile 
+          from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id where k.order_item_id in(
+        select item.id from t_train_order_item item 
+		left join t_train_order t on t.id=item.order_id
+		where item.goods_type='TICKET'  and item.order_id=#{orderId}) and k.id not in (select k1.ticket_parent_id from t_train_ticket k1 where k1.order_item_id in(
+       select item1.id from t_train_order_item item1 
+		left join t_train_order t1 on t1.id=item1.order_id
+		where item1.goods_type='TICKET'  and item1.order_id=#{orderId}) and k1.type=#{type})
+		<if test="type != null and type != ''">
+		    and k.type !=#{type}
+		</if>
+  </select>
+  
+  <select id="findTicketByHbOrderId" resultMap="ticketInfoVoToMap">
+     select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,k.request_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id
+     where 1=1  
+     <if test="hbOrderId != null and hbOrderId != ''">
+       and k.hb_order_id=#{hbOrderId}
+     </if>
+     <if test="type != null and type != ''">
+        and k.type=#{type}
+     </if>
+  </select>
+  
+  <select id="findTicketByPayInfoId" resultMap="ticketInfoVoToMap">
+     select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id
+     where 1=1  and k.id in (select e.goods_id from t_train_pay_order_item e where e.pay_info_id =#{payInfoId} and e.goods_type='TICKET') 
+     <if test="type != null and type != ''">
+        and k.type=#{type}
+     </if>
+  </select>
+  
+<select id="findTicketByStatus" resultMap="ticketMap">
+       select id,order_item_id orderItemId,passenger_id passengerId,route_type routeType,train_cn trainCn,orig_station origStation,
+            dest_station destStation,start_time startTime,end_time endTime,train_type trainType,seat_type seatType,hb_order_id,
+            ticket_parent_id ticketParentId,sale_price salePrice,fee,status,create_time createTime,update_time updateTime
+       from t_train_ticket where status = '0' and  DATEDIFF(DATE_FORMAT(#{nowdate},'%Y-%m-%d'),DATE_FORMAT(create_time,'%Y-%m-%d'))<![CDATA[ > ]]>1
+  </select>
+  
+  <update id="updateTicketConfirmStatus" parameterType="Ticket">
+     update t_train_ticket set status = #{status} where changeNo = #{changeNo}
+  </update>
+  
+  <select id="findTicketInfoById" resultMap="ticketInfoVoToMap">
+  	select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime from t_train_ticket k INNER JOIN t_train_passenger p on k.passenger_id = p.id where k.id = #{id};
+  </select>
+  
+  <select id="findTicketInfoByOrderCd" resultMap="ticketInfoVoToMap">
+  	select k.id,k.order_item_id orderItemId,k.passenger_id passengerId,k.route_type routeType,k.train_cn trainCn,k.orig_station origStation,k.
+            dest_station destStation,k.start_time startTime,k.end_time endTime,k.train_type trainType,k.seat_type seatType,k.ddsj,k.ccsj,k.
+            ticket_parent_id ticketParentId,k.sale_price salePrice,k.fee,k.cxin,k.status,k.create_time createTime,k.update_time updateTime,k.hb_order_id,k.orig_station_name,k.dest_station_name,k.type,k.ticket_no,
+            k.book_account,k.request_no,k.applicant_id,k.refund_reason,k.refund_desc,k.verify_desc,k.transaction_id,k.order_number,k.hb_price,k.tmc_price,k.hb_seat_type,k.operator,
+          p.id p_id,p.name,p.cert_type,p.cert_cn,p.create_time p_createTime,p.mobile 
+          from t_train_ticket k left join t_train_passenger p on k.passenger_id=p.id where k.order_item_id in(
+        select item.id from t_train_order_item item 
+		left join t_train_order t on t.id=item.order_id
+		where item.goods_type='TICKET' 
+		 <if test="orderCn != null and orderCn != ''">
+		   and t.order_cn=#{orderCn}
+		 </if>
+		)
+		<if test="type != null and type != ''">
+		    and k.type =#{type}
+		</if>
+		<if test="status != null and status != ''">
+		    and k.status =#{status}
+		</if>
+  
+  </select>
+  
+  
+</mapper>

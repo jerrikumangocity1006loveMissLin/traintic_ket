@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.PurchaseDetailInfoMapper">
+  <resultMap type="PurchaseDetailInfo" id="purchaseDetailInfoMap">
+    <result property="id" column="id"/>
+    <result property="purchaseItemId" column="purchase_item_id"/>
+    <result property="type" column="type"/>
+    <result property="priceType" column="price_type"/>
+    <result property="amount" column="amount"/>
+    <result property="acount" column="acount"/>
+  </resultMap>
+  
+  <insert id="save" parameterType="PurchaseDetailInfo" keyProperty="id">
+     insert into t_train_purchase_info (purchase_item_id,type,price_type,amount,acount)
+     values(#{purchaseItemId},#{type},#{priceType},#{amount},#{acount})
+  </insert>
+  
+  <select id="find" parameterType="java.lang.Long" resultMap="purchaseDetailInfoMap">
+      select id,purchase_item_id,type,amount,acount from t_train_purchase_info
+      where id=#{id}
+  </select>
+  
+  <update id="update" parameterType="PurchaseDetailInfo">
+      update t_train_purchase_info set amount=#{amount} where id=#{id}
+  </update>
+  
+  <delete id="id" parameterType="java.lang.Long">
+      delete from t_train_purchase_info where id =#{id}
+  </delete>
+  
+  <select id="pageBySql" resultMap="purchaseDetailInfoMap">
+        select id,purchase_item_id,type,amount,acount from t_train_purchase_info LIMIT #{startNum}, #{pageSize}
+  </select>
+</mapper>

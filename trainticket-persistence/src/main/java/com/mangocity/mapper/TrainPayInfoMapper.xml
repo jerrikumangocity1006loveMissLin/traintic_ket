@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.TrainPayInfoMapper">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="TrainPayInfo" keyProperty="id">
+		insert
+		into
+		t_train_pay_info(order_id,order_cd,status,type,start_time,end_time,modify_time)
+		values(
+		#{orderId},
+		#{orderCd},
+		#{status},
+		#{type},
+		#{dateTime},
+		#{endTime},
+		#{modifyTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="TrainPayInfo">
+		<selectKey keyProperty="id" resultType="Long">
+			SELECT @@IDENTITY AS
+			id
+		</selectKey>
+		update t_train_pay_info 
+		<trim suffix="" suffixOverrides=",">
+		   <set>
+		     <if test="orderId != null">
+		       order_id=#{orderId},
+		     </if>
+		     <if test="orderCd !='' and orderCd != null">
+		       order_cd=#{orderCd},
+		     </if>
+		     <if test="status !='' and status != null">
+		       status=#{status},
+		     </if>
+		     <if test="type !='' and type != null">
+		       type=#{type},
+		     </if>
+		     <if test="dateTime !='' and dateTime != null">
+		       start_time=#{dateTime},
+		     </if>
+		     <if test="endTime != null">
+		       end_time=#{endTime}
+		     </if>
+		     <if test="modifyTime != null">
+		       modify_time=#{modifyTime}
+		     </if>
+		   </set>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<select id="find" parameterType="Long" resultMap="payInfoToMap">
+		select id,order_id,order_cd,status,type,start_time,end_time,modify_time from
+		t_train_pay_info where id=#{id}
+	</select>
+	
+	<select id="findPayInfoByItemIdCn" parameterType="map" resultMap="payInfoToMap">
+	   select info.id,info.order_id,info.order_cd,info.status,info.type,info.start_time,info.end_time,info.modify_time from
+		t_train_pay_info info where info.id in (
+		 select item.pay_info_id from t_train_pay_order_item item where item.goods_id in 
+		 <foreach collection="list" item="id" open="(" separator="," close=")" index="index">
+		    #{id}
+		 </foreach>
+		   and item.goods_type=#{goodsType}
+		)
+		and info.order_id=#{orderId} and info.type=#{payInfoType} order by info.start_time desc
+	
+	
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from t_train_pay_info
+		where id=#{id}
+	</delete>
+	
+	<select id="pageBySql" resultMap="payInfoToMap" >
+	select id,order_id,order_cd,status,type,start_time,end_time,modify_time from t_train_pay_info LIMIT #{startNum}, #{pageSize}
+	</select>
+	
+	<select id="findPayInfoByOrderId" resultMap="payInfoToMap" parameterType="Long">
+	    select id,order_id,order_cd,status,type,start_time,end_time,modify_time from
+		t_train_pay_info where order_id=#{orderId}
+	</select>
+
+	<resultMap type="TrainPayInfo" id="payInfoToMap">
+		<id property="id" column="id" />
+		<result property="orderId" column="order_id" />
+		<result property="orderCd" column="order_cd"/>
+		<result property="status" column="status" />
+		<result property="type" column="type" />
+		<result property="dateTime" column="start_time"/>
+		<result property="endTime" column="end_time" />
+		<result property="modifyTime" column="modify_time" />
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+        xmlns:aop="http://www.springframework.org/schema/aop"  
+        xmlns:tx="http://www.springframework.org/schema/tx"  
+        xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd  
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd"> 
+
+	<!-- mysql 数据库连接配置-->
+	 <!-- <bean id="btms_dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName">
+			<value>${jdbc_oracle_driverClassName}</value>
+		</property>
+		<property name="url">
+			<value>${jdbc_oracle_url}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc_oracle_username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc_oracle_password}</value>
+		</property>
+		<property name="maxActive">
+			<value>${maxActive}</value>
+		</property>
+		<property name="initialSize">
+			<value>${initialSize}</value>
+		</property>
+		<property name="maxWait">
+			<value>${maxWait}</value>
+		</property>
+		<property name="maxIdle">
+			<value>${maxIdle}</value>
+		</property>
+		<property name="minIdle">
+			<value>${minIdle}</value>
+		</property>
+		<property name="removeAbandoned">
+			<value>true</value>
+		</property>
+		<property name="removeAbandonedTimeout">
+			<value>${rtot}</value>
+		</property>
+		<property name="connectionProperties">
+			<value>clientEncoding=UTF-8</value>
+		</property>
+		<property name="poolPreparedStatements" value="true" />  
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" /> 
+	</bean> -->
+	
+	<bean id="btms_dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+		<property name="jndiName" value="${jdbc_oracle_jndi}" />
+	</bean>
+	
+	<bean id="btms_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="btms_dataSource" />
+		<property name="configLocation" value="classpath:conf/mybatis-config.xml"></property>
+		<!-- <property name="typeAliasesPackage" value="com.mangocity.model"></property> -->
+	</bean>
+
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mangocity.btms.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="btms_sqlSessionFactory"></property>
+	</bean>
+
+	<bean id="btms_transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="btms_dataSource" />
+		<qualifier value="btms"/> 
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="btms_transactionManager"/>
+
+</beans>

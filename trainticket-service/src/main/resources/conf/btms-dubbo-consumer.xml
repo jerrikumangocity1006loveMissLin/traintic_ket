@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+        
+        <!-- 火车票审批类 -->
+	<dubbo:reference id="trainTicketApprovalService" interface="com.mangocity.btms.approval.service.TrainTicketApprovalService" />
+
+	<!-- 火车票审批消息类 -->
+	<dubbo:reference id="trainTicketApprovalMessageService" interface="com.mangocity.btms.approval.service.TrainTicketApprovalMessageService" />
+
+	<!-- 审批消息类 -->
+	<dubbo:reference id="duapprovalMessageService" interface="com.mangocity.btms.approval.service.ApprovalMessageService" />
+
+	<!-- 审批类 -->
+	<dubbo:reference id="duapprovalService" interface="com.mangocity.btms.approval.service.ApprovalService"/>
+	
+	<!-- 会员管控类 -->
+    <dubbo:reference interface="com.mangocity.member.adapter.service.MemberAdapterService" id="dumemberAdapterService" />
+    
+    <!-- 项目类 -->
+    <dubbo:reference interface="com.mangocity.btms.projectmanagement.service.ProjectService" id="duprojectService" />
+    
+    <!-- 公司类 -->
+    <!-- <dubbo:reference interface="com.mangocity.mbr.corporation.service.CorporationService" id="ducorporationService" />
+     -->
+     <!-- 项目中心类 -->
+    <dubbo:reference interface="com.mangocity.btms.costcenter.service.CostCenterService" id="ducostCenterService" />
+    
+    <!-- 联系人类 -->
+    <dubbo:reference interface="com.mangocity.btms.contract.service.ContractService" id="ducontractService" />
+    
+    <!-- 部门服务类 -->
+    <dubbo:reference interface="com.mangocity.btms.organization.service.DepartmentService" id="dudepartmentService" />
+    
+     <!-- 公司框构服务类 -->
+    <dubbo:reference interface="com.mangocity.btms.core.manager.HierarchyArchitectureManager" id="duhierarchyArchitectureManager" />
+    
+     <!-- 公司配置务类 -->
+    <dubbo:reference interface="com.mangocity.btms.organization.configuration.service.CorporationConfigService" id="ducorporationConfigService" />
+    
+    <!-- 公司框构服务类 -->
+    <dubbo:reference interface="com.mangocity.btms.policy.service.TravelPolicyService" id="dutravelPolicyService" />
+    
+    <!-- 服务类 -->
+    <dubbo:reference interface="com.mangocity.btms.reportauthority.service.ReportAuthorityRoleService" id="dureportAuthorityRoleService" />
+
+
+</beans>

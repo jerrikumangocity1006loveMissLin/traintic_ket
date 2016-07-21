@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.mangocity.mapper.DeliveryMapper" >
+	
+	<resultMap type="Delivery" id="deliveryMap">
+	  <result column="id" property="id"/>
+	  <result column="deliveryCn" property="deliveryCn"/>
+	  <result column="order_item_id" property="orderItemId"/>
+	  <result column="type" property="type"/>
+	  <result column="status" property="status"/>
+	  <result column="fee" property="fee"/>
+	  <result column="city" property="city"/>
+	  <result column="address" property="address"/>
+	  <result column="deliveryTime" property="deliveryTime"/>
+	  <result column="createTime" property="createTime"/>
+	  <result column="updateTime" property="updateTime"/>
+	</resultMap>
+	
+	<insert id="saveBatchDelevery" parameterType="java.util.List">
+	   insert into t_train_delivery(delivery_cn,order_item_id,type,status,fee,city,address,delivery_time,create_time)
+	   values
+	   <foreach collection="list" index="index" item="item" separator=",">
+	   (#{item.deliveryCn},#{item.orderItemId},#{item.type},#{item.status},#{item.fee},#{item.city},#{item.address},#{item.deliveryTime},#{item.createTime})
+	   </foreach>
+	</insert>
+	
+	<insert id="save" parameterType="Delivery" keyProperty="id">
+	     insert into t_train_delivery(delivery_cn,order_item_id,type,status,fee,city,address,delivery_time,create_time)
+	   values(#{deliveryCn},#{orderItemId},#{type},#{status},#{fee},#{city},#{address},#{deliveryTime},#{createTime})
+	</insert>
+	
+	<select id="find" parameterType="java.lang.Long" resultMap="deliveryMap">
+	  select id,delivery_cn deliveryCn,order_item_id,type,status,fee,city,address,delivery_time deliveryTime,create_time createTime
+	    from t_train_delivery
+	   where id = #{id}
+	</select>
+	
+	<select id="findDeliveryByOrderItemId" resultMap="deliveryMap">
+	  select id,delivery_cn deliveryCn,order_item_id,type,status,fee,city,address,delivery_time deliveryTime,create_time createTime
+	    from t_train_delivery
+	   where order_item_id=#{orderItemId}
+	</select>
+	
+	<delete id="delete" parameterType="java.lang.Long">
+	    delete from t_train_delivery where id=#{id}
+	</delete>
+	
+	<update id="update" parameterType="Delivery">
+	  update t_train_delivery set status =#{status},update_time=#{updateTime}
+	  where id =#{id}
+	</update>
+	
+	<select id="pageBySql" resultMap="deliveryMap">
+	   select id,delivery_cn deliveryCn,order_item_id,type,status,fee,city,address,delivery_time deliveryTime,create_time createTime
+	    from t_train_delivery limit #{startNum},#{pageSize}
+	</select>
+</mapper>

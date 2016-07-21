@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.TrainOrderMapper">
+
+	<resultMap type="Order" id="orderMap">
+		<result property="id" column="id" />
+		<result property="orderCn" column="order_cn" />
+		<result property="status" column="status"/>
+		<result property="memberCn" column="member_cn" />
+		<result property="orderFrom" column="order_from" />
+		<result property="companyCode" column="company_code" />
+		<result property="bookMember" column="book_member" />
+		<result property="costCenter" column="cost_center" />
+		<result property="createTime" column="create_time" />
+		<result property="travelType" column="travel_type" />
+		<result property="projectCode" column="project_code" />
+		<result property="updateTime" column="update_time" />
+		<result property="paymentStatus" column="payment_status"/>
+		<result property="orderMethod" column="order_method"/>
+		<result property="orderChannel" column="order_channel"/>
+		<result property="orderAudit" column="order_audit"/>
+		<result property="outMethod" column="out_method"/>
+		<result property="frontRemark" column="front_remark"/>
+		<result property="middRemark" column="mid_remark"/>
+		<result property="routeType" column="route_type"/>
+		<result property="settlement" column="settlement"/>
+		<result property="department" column="department"/>
+		<result property="paymentMethod" column="payment_method"/>
+		<result property="isNeedAudit" column="is_need_audit"/>
+	</resultMap>
+	
+	<resultMap type="com.mangocity.vo.OrderBasisVo" id="orderBasisVoToMap" extends="orderMap">
+		<result property="payModel" column="pay_mode" />
+		<result property="ccsj" column="ccsj"/>
+		<result property="ccrq" column="ccrq"/>
+		<result property="origStationName" column="orig_station_name"/>
+		<result property="destStationName" column="dest_station_name"/>
+		<result property="orderItemId" column="order_item_id"/>
+	</resultMap>
+	
+	<sql id="searchCodition">
+	    
+	    <if test="pageOrderParameter.orderCd !='' and pageOrderParameter.orderCd !=null">
+	       and a.order_cn=#{pageOrderParameter.orderCd}
+	    </if>
+	    <if test="pageOrderParameter.memberCd !='' and pageOrderParameter.memberCd !=null">
+	       and a.member_cn=#{pageOrderParameter.memberCd}
+	    </if>
+	    <if test="pageOrderParameter.memeberName !='' and pageOrderParameter.memeberName !=null">
+	       and a.book_member=#{pageOrderParameter.memeberName}
+	    </if>
+	    <if test="pageOrderParameter.orderStatus !='' and pageOrderParameter.orderStatus !=null">
+	       and a.`status`=#{pageOrderParameter.orderStatus}
+	    </if>
+	    <if test="pageOrderParameter.orderTimeStart !='' and pageOrderParameter.orderTimeStart !=null">
+	       and a.create_time <![CDATA[ >= ]]>#{pageOrderParameter.orderTimeStart}
+	    </if>
+	    <if test="pageOrderParameter.orderTimeEnd !='' and pageOrderParameter.orderTimeEnd !=null">
+	        and a.create_time <![CDATA[ < ]]>date_add(#{pageOrderParameter.orderTimeEnd},interval 1 day)
+	    </if>
+	    <if test="pageOrderParameter.passengerName !='' and pageOrderParameter.passengerName !=null">
+	        and a.`name` =#{pageOrderParameter.passengerName}
+	    </if>
+	    <if test="pageOrderParameter.travelTo !='' and pageOrderParameter.travelTo !=null">
+	        and a.dest_station=#{pageOrderParameter.travelTo}
+	    </if>
+	    <if test="pageOrderParameter.travelFrom !='' and pageOrderParameter.travelFrom !=null">
+	        and a.orig_station=#{pageOrderParameter.travelFrom}
+	    </if>
+	    <if test="pageOrderParameter.payStatus !='' and pageOrderParameter.payStatus !=null">
+	       and a.payment_status=#{pageOrderParameter.payStatus}
+	    </if>
+	    <if test="pageOrderParameter.travelTimeStart !='' and pageOrderParameter.travelTimeStart !=null">
+	      and a.start_time <![CDATA[ >= ]]>#{pageOrderParameter.travelTimeStart}
+	    </if>
+	    <if test="pageOrderParameter.travelTimeEnd !='' and pageOrderParameter.travelTimeEnd !=null">
+	      and a.end_time<![CDATA[ <= ]]>date_add(#{pageOrderParameter.travelTimeEnd},interval 1 day)
+	    </if>
+	    <if test="pageOrderParameter.travelCd !='' and pageOrderParameter.travelCd !=null">
+	     and a.train_cn=#{pageOrderParameter.travelCd}
+	    </if>
+	    <if test="pageOrderParameter.platCd12306 !='' and pageOrderParameter.platCd12306 !=null">
+	     and a.order_number=#{pageOrderParameter.platCd12306}
+	    </if>
+	    <if test="pageOrderParameter.type != '' and pageOrderParameter.type != null">
+	      and a.type=#{pageOrderParameter.type}
+	    </if>
+	</sql>
+	
+	<insert id="save" parameterType="Order" keyProperty="id"
+		useGeneratedKeys="true">
+		insert into
+		t_train_order(order_cn,status,member_cn,order_from,company_code,book_member,cost_center,travel_type,project_code,
+		   payment_status,order_channel,order_method,out_method,route_type,department,settlement,front_remark,mid_remark,create_time)
+		values
+		(#{orderCn},#{status},#{memberCn},#{orderFrom},#{companyCode},#{bookMember},#{costCenter},#{travelType},#{projectCode},
+		#{paymentStatus},#{orderChannel},#{orderMethod},#{outMethod},#{routeType},#{department},#{settlement},#{frontRemark},#{middRemark},#{createTime})
+	</insert>
+
+	<select id="find" resultMap="orderMap" parameterType="java.lang.Long">
+		select id id,order_cn orderCn,status status,member_cn memberCn,order_from,route_type,payment_method,
+		order_from,payment_status,order_channel,order_method,order_audit,out_method,department,settlement,
+		company_code companyCode,book_member bookMember,cost_center costCenter,create_time,order_method
+		,travel_type,project_code,out_method,order_audit,order_channel,update_time,front_remark,mid_remark
+		from t_train_order where id=#{id}
+	</select>
+
+	<select id="findOrderByOrderCn" resultMap="orderMap"
+		parameterType="String">
+		select id id,order_cn,status,member_cn,order_from,order_channel,department,order_method,order_audit,out_method,
+		company_code,book_member,cost_center,create_time,travel_type,project_code,payment_method,update_time,settlement,
+		payment_status,front_remark,mid_remark,route_type
+		from t_train_order where order_cn=#{orderCn} order by create_time desc
+	</select>
+
+	<delete id="delete" parameterType="Long">
+		delete from t_train_order where id=#{id}
+	</delete>
+
+	<update id="update" parameterType="Order">
+		update t_train_order set status =#{status},payment_status=#{paymentStatus},
+		member_cn =#{memberCn},order_from=#{orderFrom},company_code =#{companyCode},book_member=#{bookMember},
+		cost_center =#{costCenter},travel_type=#{travelType},project_code =#{projectCode},payment_status=#{paymentStatus},
+		order_channel =#{orderChannel},order_method=#{orderMethod},out_method =#{outMethod},route_type=#{routeType},
+		department =#{department},settlement=#{settlement},front_remark =#{frontRemark},mid_remark=#{middRemark},
+		update_time=sysdate()
+		where id=#{id}
+	</update>
+
+	<select id="queryOrderBasisList" resultMap="orderBasisVoToMap">
+		SELECT DISTINCT tr.*,td.pay_mode,td.status FROM t_train_order tr
+		LEFT JOIN t_train_order_item ti ON tr.id = ti.order_id
+		LEFT JOIN t_train_ticket tt ON ti.id = tt.order_item_id
+		LEFT JOIN t_train_pay tp ON tr.order_cn = tp.order_cd
+		LEFT JOIN t_train_pay_detail td ON td.pay_id = tp.id
+	</select>
+
+	<select id="queryOrderBasisListByPage" resultMap="orderBasisVoToMap">
+		select DISTINCT (a.id),a.order_cn,a.ccrq,a.ccsj,a.dest_station_name,a.orig_station_name,
+		a.book_member,a.member_cn,a.create_time,a.payment_status,a.`status`,a.company_code,a.order_number
+		 FROM(	select tr.id,tr.book_member,tr.`status`,tr.company_code,tr.order_cn,tr.member_cn,tr.create_time,date_format(tt.start_time,'%Y-%m-%d')ccrq,
+		        tt.orig_station_name,tt.dest_station_name,tt.ccsj,p.`name`,tt.dest_station,tt.orig_station,
+                tt.start_time,tt.end_time,tt.train_cn,tt.hb_order_id,tt.order_number,tt.type,IFNULL(tp.`status`,0) payment_status  
+                FROM t_train_order tr
+		LEFT JOIN t_train_order_item ti ON tr.id = ti.order_id
+		LEFT JOIN t_train_ticket tt ON ti.id = tt.order_item_id
+		LEFT JOIN t_train_pay_info tp ON tr.order_cn = tp.order_cd and tp.type = 0
+        LEFT JOIN t_train_passenger p ON p.id= tt.passenger_id
+		LEFT JOIN t_train_pay_detail td ON td.pay_id = tp.id
+        )a
+		where 1=1
+		 <include refid="searchCodition" /> 
+		 GROUP BY id
+		 ORDER BY id DESC
+		LIMIT #{startNum},#{pageSize}
+	</select>
+	
+	<select id="queryOrderNumber" resultType="Integer">
+	  	select count(*) from (SELECT
+			count(0) from (select tr.id,tr.book_member,tr.`status`,tr.order_cn,tr.member_cn,tr.create_time,date_format(tt.start_time,'%Y-%m-%d')ccrq,
+		        tt.orig_station_name,tt.dest_station_name,tt.ccsj,p.`name`,tt.dest_station,tt.orig_station,
+                tt.start_time,tt.end_time,tt.train_cn,tt.hb_order_id,tt.order_number,tt.type,IFNULL(tp.`status`,0) payment_status  
+                FROM t_train_order tr
+		LEFT JOIN t_train_order_item ti ON tr.id = ti.order_id
+		LEFT JOIN t_train_ticket tt ON ti.id = tt.order_item_id
+		LEFT JOIN t_train_pay_info tp ON tr.order_cn = tp.order_cd and tp.type = 0
+        LEFT JOIN t_train_passenger p ON p.id= tt.passenger_id
+		LEFT JOIN t_train_pay_detail td ON td.pay_id = tp.id
+      )a
+     where 1=1
+	   <include refid="searchCodition"/>
+	   GROUP BY id 
+	    )temp
+	</select>
+	
+	<!-- 退票列表  type=2为退票-->
+	<select id="queryRefundOrderBasisListByPage" resultMap="orderBasisVoToMap">
+		select a.id,a.order_cn,a.ccrq,a.ccsj,a.dest_station_name,a.orig_station_name,
+		a.book_member,a.member_cn,a.create_time,a.payment_status,a.order_item_id,a.`status`,a.company_code 
+		 FROM(
+		 SELECT o.id,o.order_cn ,date_format(t.start_time,'%Y-%m-%d') AS ccrq,t.ccsj,t.dest_station_name,t.orig_station_name,
+		 o.book_member,o.member_cn,t.create_time,t.`status`,p1.`status` as payment_status,t.order_item_id,o.company_code,  
+		 p2.`name`,t.dest_station,t.orig_station,
+         t.start_time,t.end_time,t.train_cn,t.hb_order_id,t.type  FROM  
+	    t_train_ticket t LEFT JOIN t_train_order_item i on t.order_item_id=i.id  
+		LEFT JOIN t_train_order o on o.id=i.order_id
+		LEFT JOIN t_train_passenger p2 on p2.id=t.passenger_id
+        LEFT JOIN t_train_pay_order_item p on  p.goods_id = t.id
+        LEFT JOIN t_train_pay_info p1 on p1.id=p.pay_info_id
+		WHERE
+			t.type = '2'
+		GROUP BY
+			t.order_item_id
+		        )a
+				where 1=1
+				 <include refid="searchCodition"/> 
+				 ORDER BY id DESC
+				LIMIT #{startNum},#{pageSize}
+	</select>
+	
+	<!-- 退票列表数 -->
+	<select id="queryRefundOrderNumber" resultType="Integer">
+	  	SELECT count(0) from (
+	  	SELECT o.id,o.order_cn ,date_format(t.start_time,'%Y-%m-%d') AS ccrq,t.ccsj,t.dest_station_name,t.orig_station_name,
+		 o.book_member,o.member_cn,t.create_time,t.`status`,p1.`status` as payment_status,t.order_item_id,o.company_code,  
+		 p2.`name`,t.dest_station,t.orig_station,
+         t.start_time,t.end_time,t.train_cn,t.hb_order_id,t.type  FROM  
+	    t_train_ticket t LEFT JOIN t_train_order_item i on t.order_item_id=i.id  
+		LEFT JOIN t_train_order o on o.id=i.order_id
+		LEFT JOIN t_train_passenger p2 on p2.id=t.passenger_id
+        LEFT JOIN t_train_pay_order_item p on  p.goods_id = t.id
+        LEFT JOIN t_train_pay_info p1 on p1.id=p.pay_info_id
+		WHERE
+			t.type = '2'
+		GROUP BY
+			t.order_item_id
+      )a
+     where 1=1
+	   <include refid="searchCodition"/>
+	</select>
+	
+
+	<select id="queryOrderBasisListByOrderTicket" resultMap="orderBasisVoToMap">
+		SELECT DISTINCT tr.*,td.pay_mode,td.status FROM
+		t_train_order tr
+		LEFT JOIN t_train_order_item ti ON tr.id = ti.order_id
+		LEFT JOIN t_train_contact tc ON tr.id =tc.order_id
+		LEFT JOIN t_train_ticket
+		tt ON ti.id = tt.order_item_id
+		LEFT JOIN t_train_passenger tps ON
+		tt.passenger_id = tps.id
+		LEFT JOIN t_train_pay tp ON tr.order_cn =
+		tp.order_cd
+		LEFT JOIN t_train_pay_detail td ON td.pay_id = tp.id
+		<where>
+			<if
+				test="orderTicketQuery.orderCn != '' and orderTicketQuery.orderCn != null">
+				tr.order_cn = #{orderTicketQuery.orderCn}
+			</if>
+			<if
+				test="orderTicketQuery.passengerName != '' and orderTicketQuery.passengerName != null">
+				tps.name = #{orderTicketQuery.passengerName}
+			</if>
+			<if test="orderTicketQuery.status !='' and orderTicketQuery.status !=null">
+				and tr.status =
+				#{orderTicketQuery.status}
+			</if>
+			<if
+				test="orderTicketQuery.memberCn !='' and orderTicketQuery.memberCn !=null">
+				and tr.member_cn = #{orderTicketQuery.memberCn}
+			</if>
+			<if
+				test="orderTicketQuery.orderFrom !='' and orderTicketQuery.orderFrom !=null">
+				and tr.order_from = #{orderTicketQuery.orderFrom}
+			</if>
+			<if
+				test="orderTicketQuery.companyCode !='' and orderTicketQuery.companyCode !=null">
+				and tr.company_code = #{orderTicketQuery.companyCode}
+			</if>
+			<if
+				test="orderTicketQuery.bookMember !='' and orderTicketQuery.bookMember !=null">
+				and tr.book_member = #{orderTicketQuery.bookMember}
+			</if>
+			<if test="orderTicketQuery.mobile !='' and orderTicketQuery.mobile !=null">
+				and tc.telephone = #{orderTicketQuery.mobile}		00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+			</if>
+			<if
+				test="orderTicketQuery.depCity !='' and orderTicketQuery.depCity !=null">
+				and tt.orig_station = #{orderTicketQuery.depCity}
+			</if>
+			<if
+				test="orderTicketQuery.arrCity !='' and orderTicketQuery.arrCity !=null">
+				and tt.dest_station = #{orderTicketQuery.arrCity}
+			</if>
+			<if
+				test="orderTicketQuery.oderTimeStart !='' and orderTicketQuery.oderTimeStart !=null">
+				<![CDATA[
+					and DATE_FORMAT(tr.create_time, '%Y-%m-%d') >= DATE_FORMAT(#{orderTicketQuery.oderTimeStart}, '%Y-%m-%d')
+				]]>
+			</if>
+			<if
+				test="orderTicketQuery.oderTimeEnd !='' and orderTicketQuery.oderTimeEnd !=null">
+				<![CDATA[
+					and DATE_FORMAT(tr.create_time,'%Y-%m-%d') <= DATE_FORMAT(#{orderTicketQuery.oderTimeEnd},'%Y-%m-%d')
+				]]>
+			</if>
+			<if
+				test="orderTicketQuery.depTimeStart !='' and orderTicketQuery.depTimeStart !=null">
+				<![CDATA[
+					and DATE_FORMAT(tt.start_time,'%Y-%m-%d') >= DATE_FORMAT(#{orderTicketQuery.depTimeStart}, '%Y-%m-%d')
+				]]>
+			</if>
+			<if
+				test="orderTicketQuery.depTimeEnd !='' and orderTicketQuery.depTimeEnd !=null">
+				<![CDATA[
+					and DATE_FORMAT(tt.start_time,'%Y-%m-%d') <= DATE_FORMAT(#{orderTicketQuery.depTimeEnd}, '%Y-%m-%d')
+				]]>
+			</if>
+		</where>
+		LIMIT #{startNum},#{pageCount}
+	</select>
+	
+	<update id="updateOrderStatus" parameterType="Order">
+	    update t_train_order set `status`=#{status},update_time=#{updateTime} where id=#{id}
+	</update>
+	
+	<update id="updateOrderBasic">
+	    update t_train_order 
+	    <set>
+	        <if test="order.frontRemark !=null and order.frontRemark!=''">
+	             front_remark=#{order.frontRemark},
+	        </if>
+	        <if test="order.middRemark !=null and order.middRemark!=''">
+	             mid_remark=#{order.middRemark},
+	        </if>
+	        <if test="order.settlement !=null and order.settlement!=''">
+	            settlement=#{order.settlement},
+	        </if>
+	        <if test="order.travelType !=null and order.travelType!=''">
+	            travel_type =#{order.travelType},
+	        </if>
+	        <if test="order.updateTime !=null">
+	          update_time = #{order.updateTime}
+	        </if>
+	    </set>
+        where order_cn=#{order.orderCn}
+	</update>
+	
+	<update id="updateOrderPaymethod">
+	   update t_train_order 
+	   <set>
+	      <if test="order.frontRemark !=null and order.frontRemark!=''">
+	          front_remark=#{order.frontRemark},
+	      </if>
+	      <if test="order.paymentMethod !=null and order.paymentMethod !=''">
+	          payment_method=#{order.paymentMethod},
+	      </if>
+	      <if test="order.isNeedAudit !=null and order.isNeedAudit !=''">
+	          is_need_audit=#{order.isNeedAudit},
+	      </if>
+	      <if test="order.travelType !=null and order.travelType!=''">
+	          travel_type =#{order.travelType},
+	      </if>
+	      <if test="order.updateTime !=null">
+	          update_time = #{order.updateTime},
+	      </if>
+	       <if test="order.status !=null and order.status != ''">
+	         `status`=#{order.status}
+	      </if>
+	     
+	   </set>
+	 where id=#{order.id}
+	</update>
+
+</mapper>

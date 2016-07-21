@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.TrainPayOrderItemMapper">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="TrainPayOrderItem" keyProperty="id">
+		insert
+		into
+		t_train_pay_order_item(pay_info_id,goods_id,goods_type,create_time)
+		values(
+		#{payInfoId},
+		#{goodsId},
+		#{goodsType},
+		#{createTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="TrainPayOrderItem">
+		<selectKey keyProperty="id" resultType="Long">
+			SELECT @@IDENTITY AS
+			id
+		</selectKey>
+		update t_train_pay_order_item
+		<trim suffix="" suffixOverrides=",">
+		   <set>
+		     <if test="payInfoId != null">
+		       pay_info_id=#{payInfoId},
+		     </if>
+		     <if test="goodsId != null">
+		       goods_id=#{goodsId},
+		     </if>
+		     <if test="goodsType != null and goodsType != ''">
+		       goods_type=#{goodsType},
+		     </if>
+		     <if test="createTime != null">
+		       create_time=#{createTime}
+		     </if>
+		   </set>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<select id="find" parameterType="Long" resultMap="payOrderItemToMap">
+		select id,pay_info_id,goods_id,goods_type,create_time from
+		t_train_pay_order_item where id=#{id}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from t_train_pay_order_item
+		where id=#{id}
+	</delete>
+	
+	<select id="pageBySql" resultMap="payOrderItemToMap" >
+	select id,pay_info_id,goods_id,goods_type,create_time from t_train_pay_order_item LIMIT #{startNum}, #{pageSize}
+	</select>
+	
+	<resultMap type="TrainPayOrderItem" id="payOrderItemToMap">
+		<id property="id" column="id" />
+		<result property="payInfoId" column="pay_info_id" />
+		<result property="goodsId" column="goods_id"/>
+		<result property="goodsType" column="goods_type"/>
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.ChargeMapper">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="Charge" keyProperty="id">
+		insert
+		into
+		t_train_charge(order_item_id,name,price,type)
+		values(
+		#{orderItemId},
+		#{name},
+		#{price},
+		#{type})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="Charge">
+		<selectKey keyProperty="id" resultType="Long">
+			SELECT @@IDENTITY AS
+			id
+		</selectKey>
+		update t_train_charge set
+		order_item_id=#{orderItemId},
+		name=#{name},
+		price=#{price},
+		type=#{type}
+		where id=#{id}
+	</update>
+
+	<select id="find" parameterType="Long" resultMap="chargeToMap">
+		select id,order_item_id,name,price,type from
+		t_train_charge where id=#{id}
+	</select>
+	
+	<select id="findByName" resultMap="chargeToMap">
+		select id,order_item_id,name,price,type from t_train_charge where name=#{name}
+	</select>
+	
+	<select id="findByOrderItemId" resultMap="chargeToMap">
+	    select id,order_item_id,name,price,type from t_train_charge where order_item_id=#{orderItemId}
+	</select>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from t_train_charge
+		where id=#{id}
+	</delete>
+	
+	<select id="pageBySql" resultMap="chargeToMap" >
+	select id,order_item_id,name,price,type from t_train_charge LIMIT #{startNum}, #{pageSize}
+	</select>
+	
+	<insert id="batchSaveCharge" parameterType="java.util.List">
+	   insert into t_train_charge(order_item_id,name,price,type)
+	    values
+	   <foreach collection="list" index="index" item="item" separator=",">
+	     (#{item.orderItemId},#{item.name},#{item.price},#{item.type})
+	   </foreach>
+	   
+	</insert>
+
+	<resultMap type="Charge" id="chargeToMap">
+		<id property="id" column="id" />
+		<result property="orderItemId" column="order_item_id"/>
+		<result property="name" column="name" />
+		<result property="price" column="price"/>
+		<result property="type" column="type" />
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.PurchaseItemMapper">
+  <resultMap type="PurchaseItem" id="PurchaseItemMap">
+      <result property="id" column="id"/>
+      <result property="purchaseId" column="purchase_id"/>
+      <result property="goodsId" column="goods_id"/>
+      <result property="goodsType" column="goods_type"/>
+      <result property="status" column="status"/>
+      <result property="amount" column="amount"/>
+      <result property="supplier" column="supplier"/>
+      <result property="hbOrderId" column="hb_order_id"/>
+      <result property="trainNo" column="train_no"/>
+      <result property="trainSeat" column="train_seat"/>
+      <result property="orderNo" column="order_no"/>
+      <result property="createTime" column="create_time"/>
+      <result property="hbPrice" column="hb_price"/>
+  </resultMap>
+  
+  <select id="find" parameterType="Long" resultMap="PurchaseItemMap">
+     select id,purchase_id,goods_id,goods_type,status,amount,supplier,hb_order_id,train_no,train_seat,order_no,create_time from t_train_purchase_item
+     where id=#{id}
+  </select>
+  
+  <insert id="save" parameterType="PurchaseItem" keyProperty="id">
+     insert into t_train_purchase_item(purchase_id,goods_id,goods_type,status,amount,supplier,hb_order_id,train_no,train_seat,order_no,create_time)
+     values(#{purchaseId},#{goodsId},#{goodsType},#{status},#{amount},#{supplier},#{hbOrderId},#{trainNo},#{trainSeat},#{orderNo},#{createTime})
+  </insert>
+
+  <delete id="delete" parameterType="Long">
+    delete from t_train_purchase_item where id=#{id}
+  </delete>
+  
+  <update id="update" parameterType="PurchaseItem">
+     update t_train_purchase_item 
+      <trim suffixOverrides="," suffix="">
+        <set>
+          <if test="null != purchaseId">
+            purchase_id=#{purchaseId},
+          </if>
+          <if test="null != goodsId">
+            goods_id=#{goodsId},
+          </if>
+          <if test="null != goodsType">
+            goods_type=#{goodsType},
+          </if>
+          <if test="null != status">
+            status=#{status},
+          </if>
+          <if test="null != amount">
+            amount=#{amount},
+          </if>
+          <if test="null != supplier">
+            supplier=#{supplier},
+          </if>
+          <if test="null != hbOrderId">
+            hb_order_id=#{hbOrderId},
+          </if>
+          <if test="null != trainNo">
+            train_no=#{trainNo},
+          </if>
+          <if test="null != trainSeat">
+            train_seat=#{trainSeat},
+          </if>
+          <if test="null != orderNo">
+            order_no=#{orderNo},
+          </if>
+          <if test="null != createTime">
+            create_time=#{createTime}
+          </if>
+        </set>
+      </trim>
+          where id=#{id}
+  </update>
+  
+  <select id="pageBySql" resultMap="PurchaseItemMap">
+     select id,purchase_id,goods_id,goods_type,status,amount,supplier,hb_order_id,train_no,train_seat,order_no,create_time from t_train_purchase_item
+     LIMIT #{startNum}, #{pageSize}
+  </select>
+  
+  <update id="updatePurchaseItemByGoodsId" parameterType="PurchaseItem">
+      update t_train_purchase_item set order_no=#{orderNo}, train_no=#{trainNo}, status=#{status} where  goods_id=#{goodsId}
+  </update>
+</mapper>

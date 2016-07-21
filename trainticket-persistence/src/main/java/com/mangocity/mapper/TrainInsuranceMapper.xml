@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.TrainInsuranceMapper">
+   <resultMap type="Insurance" id="insuranceMap">
+      <result column="id" property="id"/>
+      <result column="ticketId" property="ticketId"/>
+      <result column="type" property="type"/>
+      <result column="num" property="num"/>
+      <result column="descp" property="descp"/>
+      <result column="status" property="status"/>
+      <result column="price" property="price"/>
+      <result column="createTime" property="createTime"/>
+   </resultMap>
+   
+   <insert id="savebatchInsurance" parameterType="java.util.List">
+      insert into t_train_insurance(ticket_id,type,num,descp,status,price,create_time)
+      values
+      <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.ticketId},#{item.type},#{item.num},#{item.descp},#{item.status},#{item.price},#{item.createTime})
+      </foreach>
+   </insert>
+   
+   <select id="find" parameterType="java.lang.Long">
+      select id,ticket_id ticketId,type,num,descp,status,price,create_time createTime
+       from t_train_insurance
+       where id=#{id}
+   </select>
+   
+   <select id="findInsuranceByTicketId" parameterType="java.lang.Long" resultMap="insuranceMap">
+      select id,ticket_id ticketId,type,num,descp,status,price,create_time createTime
+       from t_train_insurance
+       where ticket_id=#{ticketId}
+   </select>
+   
+   <insert id="save" parameterType="Insurance">
+       insert into t_train_insurance(ticket_id,type,num,descp,status,price,create_time)
+      values(#{ticketId},#{type},#{num},#{descp},#{status},#{price},#{createTime})
+   </insert>
+   
+   <delete id="delete" parameterType="java.lang.Long">
+      delete from t_train_insurance where id=#{id}
+   </delete>
+   
+   <update id="update" parameterType="Insurance">
+      update t_train_insurance set status = #{status} where id=#{id}
+   </update>
+   
+   <select id="pageBySql" resultMap="insuranceMap">
+      select id,ticket_id ticketId,type,num,descp,status,price,create_time createTime
+       from t_train_insurance limit #{startNum},#{pageSize}
+   </select>
+</mapper>

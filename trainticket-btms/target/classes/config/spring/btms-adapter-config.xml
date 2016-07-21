@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+       xmlns="http://www.springframework.org/schema/beans"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:datagrid="http://schemas.tangosol.com/schema/datagrid-for-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       
+
+	<bean id="corporationAdapterService" class="com.mangocity.btms.adpater.service.impl.CorporationAdapterServiceImpl">
+        <property name="corporationService" ref="corporationService"/>
+    </bean>
+
+	<bean id="departmentAdapterService" class="com.mangocity.btms.adpater.service.impl.DepartmentAdapterServiceImpl">
+        <property name="departmentService" ref="departmentService"/>
+	</bean>
+
+    <bean id="contractAdapterService" class="com.mangocity.btms.adpater.service.impl.ContractAdapterServiceImpl">
+        <property name="contractService" ref="btmsContractService"/>
+        <property name="corporationAdapterService" ref="corporationAdapterService"/>
+	</bean>
+    <bean id="approvalAdapterService" class="com.mangocity.btms.adpater.service.impl.ApprovalAdapterServiceImpl">
+        <property name="approvalService" ref="approvalService"/>
+        <property name="memberAdapterService" ref="memberAdapterService"/>
+        <property name="approvalManService" ref="approvalManService"/>
+        <property name="approvalMessageService" ref="approvalMessageService"/>
+	</bean>
+
+    <bean id="costCenterAdapterService" class="com.mangocity.btms.adpater.service.impl.CostCenterAdapterServiceImpl">
+        <property name="costCenterService" ref="costCenterService"/>
+    </bean>
+    <bean id="hierarchyArchitectureAdapterService" class="com.mangocity.btms.adpater.service.impl.HierarchyArchitectureAdapterServiceImpl">
+        <property name="hierarchyArchitectureManager" ref="hierarchyArchitectureManager"/>
+    </bean>
+
+
+    <bean id="configurationAdapterService" class="com.mangocity.btms.adpater.service.impl.OrganizationConfigurationAdapterServiceImpl">
+        <property name="corporationConfigService" ref="corporationConfigService"/>
+	</bean>
+
+    <bean id="projectAdapterService" class="com.mangocity.btms.adpater.service.impl.ProjectAdapterServiceImpl">
+        <property name="projectService" ref="projectService"/>
+    </bean>
+
+    <bean id="policyAdapterService" class="com.mangocity.btms.adpater.service.impl.PolicyAdapterServiceImpl">
+        <property name="travelPolicyService" ref="travelPolicyService" />
+    </bean>
+
+    <bean id="beforeAndHour" class="com.mangocity.btms.adpater.service.handler.impl.BeforeAndAfterLowestPriceHandler"></bean>
+    <bean id="currentFlightsLowestPrice" class="com.mangocity.btms.adpater.service.handler.impl.CurrentFlightLowestPriceHandler"></bean>
+    <bean id="beforeDays" class="com.mangocity.btms.adpater.service.handler.impl.BeforeDaysHandler"></bean>
+
+	<bean id="orderServiceAdapter" class="com.mangocity.order.adpater.service.impl.OrderServiceAdapterImpl">
+        <property name="orderAdapterService" ref="orderAdapterServiceBtms"/>
+    </bean>
+
+    <bean id="reportAuthorityAdapterService" class="com.mangocity.btms.adpater.service.impl.ReportAuthorityAdapterServiceImpl" >
+        <property name="reportAuthorityRoleService" ref="reportAuthorityRoleService" />
+    </bean>
+</beans>

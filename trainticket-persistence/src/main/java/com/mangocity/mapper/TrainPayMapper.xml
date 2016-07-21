@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.TrainPayMapper">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="TrainPay" keyProperty="id" useGeneratedKeys="true">
+		insert
+		into
+		t_train_pay(pay_info_id,order_cd,amount,status,create_time,modify_time)
+		values(
+		#{payInfoId},
+		#{orderCd},
+		#{amount},
+		#{status},
+		#{createTime},
+		#{modifyTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="TrainPay">
+		<selectKey keyProperty="id" resultType="Long">
+			SELECT @@IDENTITY AS
+			id
+		</selectKey>
+		update t_train_pay 
+		<trim suffix="" suffixOverrides=",">
+		    <set>
+			  <if test="payInfoId != null">
+			    pay_info_id=#{payInfoId},
+			  </if>
+			  <if test="orderCd !='' and orderCd != null">
+			    order_cd=#{orderCd},
+			  </if>
+			  <if test="amount != null">
+			    amount=#{amount},
+			  </if>
+			  <if test="status !='' and status != null">
+			    status=#{status},
+			  </if>
+			  <if test="createTime != null">
+			    create_time=#{createTime}
+			  </if>
+			  <if test="modifyTime != null">
+			    modify_time=#{modifyTime}
+			  </if>
+			</set>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<select id="find" parameterType="Long" resultMap="trainPayToMap">
+		select id,pay_info_id,order_cd,amount,status,create_time,modify_time from
+		t_train_pay where id=#{id}
+	</select>
+	
+	<select id="findPayByInfoId" parameterType="Long" resultMap="trainPayToMap">
+	   select id,pay_info_id,order_cd,amount,status,create_time,modify_time from
+		t_train_pay where pay_info_id=#{payInfoId}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from t_train_pay
+		where id=#{id}
+	</delete>
+	
+	<select id="pageBySql" resultMap="trainPayToMap" >
+	select id,pay_info_id,order_cd,amount,status,create_time,modify_time from t_train_pay LIMIT #{startNum}, #{pageSize}
+	</select>
+
+	<resultMap type="TrainPay" id="trainPayToMap">
+		<id property="id" column="id" />
+		<result property="payInfoId" column="pay_info_id" />
+		<result property="orderCd" column="order_cd"/>
+		<result property="amount" column="amount" />
+		<result property="status" column="status" />
+		<result property="createTime" column="create_time" />
+		<result property="modifyTime" column="modify_time" />
+	</resultMap>
+
+</mapper>

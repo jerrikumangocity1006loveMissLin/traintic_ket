@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.PassengerMapper">
+     <resultMap type="Passenger" id="passengerMap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="cert_type" property="certType"/>
+        <result column="cert_cn" property="certCn"/>
+        <result column="mobile" property="mobile"/>
+        <result column="create_time" property="createTime"/>
+     </resultMap>
+     
+     <insert id="save" parameterType="Passenger" keyProperty="id" useGeneratedKeys="true">
+       insert into t_train_passenger(name,cert_type,cert_cn,mobile,create_time)
+         values(#{name},#{certType},#{certCn},#{mobile},#{createTime})
+     </insert>
+   
+   <select id="find" parameterType="Long" resultMap="passengerMap">
+     select id,name,cert_type,cert_cn,mobile,create_time from t_train_passenger where id =#{id} 
+   </select>
+   
+   <select id="findPassengerByzjhm" parameterType="java.lang.String" resultMap="passengerMap">
+      select id,name,cert_type,cert_cn,mobile,create_time from t_train_passenger where cert_cn =#{zjhm}
+      limit 0,1
+   </select>
+   
+   <select id="pageBySql" resultMap="passengerMap">
+      select id,name,cert_type,cert_cn,mobile,create_time from t_train_passenger #{startNum}, #{pageSize}
+   </select>
+   
+   <delete id="delete" parameterType="Long">
+       delete from t_train_passenger where id=#{ids} 
+   </delete>
+   
+   <update id="update" parameterType="Passenger">
+      update t_train_passenger set cert_type =#{certType} where id=#{id}
+   </update>
+   
+   <update id="updatePassengerByzjhm" parameterType="Passenger">
+       update t_train_passenger set mobile =#{mobile} where cert_cn =#{certCn}
+   </update>
+   
+</mapper>

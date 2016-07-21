@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.TrainInvoiceMapper">
+
+   <resultMap type="TrainInvoice" id="trainInvoiceMap">
+       <result column="id" property=""/>
+       <result column="invoiceHead" property="invoiceHead"/>
+       <result column="address" property="address"/>
+       <result column="invoiceUnit" property="invoiceUnit"/>
+       <result column="amount" property="amount"/>
+       <result column="drawer" property="drawer"/>
+       <result column="orderItemId" property="orderItemId"/>
+   </resultMap>
+   
+   <insert id="savebatchTrainInvoice" parameterType="java.util.List">
+      insert into t_train_invoice(invoice_head,address,invoice_unit,amount,drawer,order_item_id)
+      values
+      <foreach collection="list" item="item" index="index" separator="," >
+       (#{item.invoiceHead},#{item.address},#{item.invoiceUnit},#{item.amount},#{item.drawer},#{item.orderItemId})
+      </foreach>
+   </insert>
+   
+   <insert id="save" parameterType="TrainInvoice" keyProperty="id">
+          insert into t_train_invoice(invoice_head,address,invoice_unit,amount,drawer,order_item_id)
+      values (#{invoiceHead},#{address},#{invoiceUnit},#{amount},#{drawer},#{orderItemId})
+   </insert>
+   
+   <delete id="delete" parameterType="java.lang.Long">
+       delete from t_train_invoice where id=#{id}
+   </delete>
+   
+   <update id="update" parameterType="java.lang.Long">
+      update t_train_invoice set address =#{address},invoice_unit =#{invoiceUnit},invoice_head=#{invoiceHead}
+      where id=#{id}
+   </update>
+   
+   <select id="find" parameterType="java.lang.Long" resultMap="trainInvoiceMap">
+     select id invoice_head invoiceHead,address,invoice_unit invoiceUnit,amount,drawer,order_item_id orderItemId
+      from t_train_invoice
+      where id=#{id}
+   </select>
+   
+   <select id="findInvoiceByOrderItemId" parameterType="java.lang.Long" resultMap="trainInvoiceMap">
+     select id invoice_head invoiceHead,address,invoice_unit invoiceUnit,amount,drawer,order_item_id orderItemId
+      from t_train_invoice
+      where order_item_id=#{orderItemId}
+   </select>
+   
+   <select id="pageBySql" resultMap="trainInvoiceMap">
+     select id invoice_head invoiceHead,address,invoice_unit invoiceUnit,amount,drawer,order_item_id orderItemId
+      from t_train_invoice
+      limit #{startNum},#{pageSize}
+   </select>
+
+</mapper>

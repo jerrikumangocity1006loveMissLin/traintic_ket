@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mangocity.mapper.MessageTemplateMapper">
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="MessageTemplate" keyProperty="id">
+		insert
+		into
+		t_train_message_template(type,template_num,subject,message_content)
+		values(
+		#{type,typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		#{templateNum},
+		#{subject},
+		#{messageContent})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="MessageTemplate">
+		<selectKey keyProperty="id" resultType="Long">
+			SELECT @@IDENTITY AS
+			id
+		</selectKey>
+		update t_train_message_template set
+		type=#{type,typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		template_num=#{templateNum},
+		subject=#{subject},
+		message_content=#{messageContent}
+		where id=#{id}
+	</update>
+
+	<select id="find" parameterType="Long" resultMap="messageTemplateToMap">
+		select id,type,template_num,subject,message_content from
+		t_train_message_template where id=#{id}
+	</select>
+	
+	<select id="findByType" resultMap="messageTemplateToMap">
+		select id,type,template_num,subject,message_content from t_train_message_template where type=#{type,typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+	</select>
+	
+	<select id="findBytemplateNum" resultMap="messageTemplateToMap">
+	    select id,type,template_num,subject,message_content from t_train_message_template where template_num=#{templateNum}
+	</select>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from t_train_message_template
+		where id=#{id}
+	</delete>
+	
+	<select id="pageBySql" resultMap="messageTemplateToMap" >
+	select id,type,template_num,subject,message_content from t_train_message_template LIMIT #{startNum}, #{pageSize}
+	</select>
+
+	<resultMap type="MessageTemplate" id="messageTemplateToMap">
+		<id property="id" column="id" />
+		<result property="type" column="type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+		<result property="templateNum" column="template_num" />
+		<result property="subject" column="subject"/>
+		<result property="messageContent" column="message_content" />
+	</resultMap>
+
+</mapper>

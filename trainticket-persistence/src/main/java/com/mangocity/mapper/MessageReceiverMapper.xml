@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.MessageReceiverMapper">
+   <resultMap type="MessageReceiver" id="MessageReceiverMap">
+      <result property="id" column="id"/>
+      <result property="receiver" column="receiver"/>
+      <result property="mobile" column="mobile"/>
+      <result property="mail" column="mail"/>
+      <result property="orderId" column="order_id"/>
+      <result property="isSend" column="isSend"/>
+      <result property="affirm" column="affirm"/>
+      <result property="issut" column="issut"/>
+      <result property="approveMail" column="approval_mail"/>
+      <result property="tripMail" column="trip_mail"/>
+      <result property="sendMode" column="send_model"/>
+      <result property="memberCd" column="memberCd"/>
+      <result property="identity" column="identity"/>
+      <result property="createTime" column="create_time"/>
+   </resultMap>
+   
+   <insert id="save" parameterType="MessageReceiver">
+       insert into t_train_message_receiver(receiver,mobile,mail,order_id,isSend,affirm,issut,
+       approval_mail,trip_mail,send_model,memberCd,identity,create_time)values
+       (#{receiver},#{mobile},#{mail},#{orderId},#{isSend},#{affirm},#{issut},#{approveMail},#{tripMail},#{sendMode},
+       #{memberCd},#{identity},#{createTime})
+   </insert>
+   
+   <delete id="delete">
+      delete from t_train_message_receiver where id=#{id}
+   </delete>
+   
+   <update id="update" parameterType="MessageReceiver">
+     update t_train_message_receiver
+     <set>
+        <if test="receiver !=null and receiver!=''">
+           receiver=#{receiver},
+        </if>
+        <if test="mobile !=null and mobile!=''">
+           mobile=#{mobile},
+        </if>
+        <if test="mail !=null and mail !=''">
+           mail=#{mail},
+        </if>
+        <if test="isSend !=null and isSend !=''">
+            isSend=#{isSend}
+        </if>
+     </set>
+      where id=#{id}
+   </update>
+   
+   <select id="find" resultMap="MessageReceiverMap">
+       select receiver,mobile,mail,order_id,isSend,create_time from t_train_message_receiver where id=#{id} 
+   </select>
+   
+   <select id="queryMessageReceiversByOrderId" resultMap="MessageReceiverMap">
+       select receiver,mobile,mail,order_id,create_time,memberCd from t_train_message_receiver where order_id=#{orderId} and isSend=0
+   </select>
+</mapper>

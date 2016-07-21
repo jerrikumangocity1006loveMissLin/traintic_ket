@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="GB2312"?>
+<?xml-stylesheet type="text/xsl" href="trainTicketOrder.xsl"?> 
+<trainTicketOrder>
+	<company>$itm.company$</company><!-- 公司 -->
+	<branch>$itm.branch$</branch><!-- 公司分部 -->
+	<operater>$itm.operater$</operater><!-- 操作者 -->
+	<telephone>$itm.telephone$</telephone><!-- 电话 -->
+	<reasonCode>$itm.reasonCode$</reasonCode><!-- 原因代码 -->
+	<costCenter>$itm.costCenter$</costCenter><!-- 成本中心 -->
+	<orderCn>$itm.orderCn$</orderCn><!-- 订单 -->
+	<ticketList>
+	   <ticket>
+	      <no>$itm.no$</no>
+	      <name>$itm.name$</name>
+	      <train>$itm.trainCn$</train>
+	      <date>$itm.startDate$</date>
+	      <origStationName>$itm.origStationName$</origStationName>
+	      <startTime>$itm.startTime$</startTime>
+	      <destStationName>$itm.destStationName$</destStationName>
+	      <endTime>$itm.endTime$</endTime>
+	      <seat>$itm.seatType$</seat>
+	      <price>$itm.price$</price>
+	      <serviceCharge>$itm.fee$</serviceCharge>
+	   </ticket>
+	</ticketList>
+	<allPrice>$itm.allPrice$</allPrice>
+</trainTicketOrder>

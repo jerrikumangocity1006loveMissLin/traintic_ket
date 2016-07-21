@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+       xmlns="http://www.springframework.org/schema/beans"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       
+
+	<bean id="CorporationRmiFactory" class="com.mangocity.btms.adpater.service.handler.impl.ExtServiceClientRmiFactory">
+         <constructor-arg>
+             <value>config/ejbConfig/CorporationServiceClientConfig.xml</value>
+         </constructor-arg>
+        <constructor-arg>
+            <value>{Corporation_Ejb.java.naming.provider.url}</value>
+        </constructor-arg>
+    </bean>
+
+	 <bean id="BTMSRmiFactory" class="com.mangocity.btms.adpater.service.handler.impl.ExtServiceClientRmiFactory">
+         <constructor-arg>
+             <value>config/ejbConfig/BTMSServiceClientConfig.xml</value>
+         </constructor-arg>
+         <constructor-arg>
+            <value>{BTMS_Ejb.java.naming.provider.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="DeliveryRmiFactory" class="com.mangocity.btms.adpater.service.handler.impl.ExtServiceClientRmiFactory">
+        <constructor-arg>
+            <value>config/ejbConfig/TmcDeliveryServiceClientConfig.xml</value>
+        </constructor-arg>
+        <constructor-arg>
+            <value>{Delivery_Ejb.java.naming.provider.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="TmcPriceRmiFactory" class="com.mangocity.btms.adpater.service.handler.impl.ExtServiceClientRmiFactory">
+        <constructor-arg>
+            <value>config/ejbConfig/TMCPriceServiceClientConfig.xml</value>
+        </constructor-arg>
+         <constructor-arg>
+            <value>{TmcPrice_Ejb.java.naming.provider.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="mbrRmiFactory" class="com.mangocity.btms.adpater.service.handler.impl.ExtServiceClientRmiFactory">
+        <constructor-arg>
+            <value>config/ejbConfig/MbrServiceClientConfig.xml</value>
+        </constructor-arg>
+         <constructor-arg>
+            <value>{mbr_ejb.java.naming.provider.url}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="passengerService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="mbrRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.services.passenger.IPassengerService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="hisLinkPersonService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="mbrRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.services.hislinkperson.IHisLinkPersonService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="addressService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="mbrRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.services.address.IAddressService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="corporationService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="CorporationRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.mbr.corporation.service.CorporationService</value>
+            </list>
+        </property>
+    </bean>
+
+	<bean id="initializationParamManagerFacade" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="CorporationRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                    <value>com.mangocity.mbr.corporation.manager.facade.InitializationParamManagerFacade</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="departmentService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.organization.service.DepartmentService</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="btmsContractService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.contract.service.ContractService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="costCenterService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.costcenter.service.CostCenterService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="projectService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.projectmanagement.service.ProjectService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="memberAdapterService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.member.adapter.service.MemberAdapterService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="hierarchyArchitectureManager" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+         <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.core.manager.HierarchyArchitectureManager</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="corporationConfigService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.organization.configuration.service.CorporationConfigService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="travelPolicyService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.policy.service.TravelPolicyService</value>
+            </list>
+        </property>
+    </bean>
+
+     <bean id="approvalMessageService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.approval.service.ApprovalMessageService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="approvalService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.approval.service.ApprovalService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="approvalManService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.approval.service.ApprovalManService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="deliveryConfigurationService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="DeliveryRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcdelivery.service.DeliveryConfigurationService</value>
+            </list>
+        </property>
+	</bean>
+
+	<bean id="deliveryAddressService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="DeliveryRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcdelivery.service.DeliveryAddressService</value>
+            </list>
+        </property>
+    </bean>
+
+	<bean id="deliveryItemService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="DeliveryRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcdelivery.service.DeliveryItemService</value>
+            </list>
+        </property>
+	</bean>
+
+	<bean id="deliveryCycleService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="DeliveryRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcdelivery.service.DeliveryCycleService</value>
+            </list>
+        </property>
+	</bean>
+
+    <bean id="deliveryItemDetailInfoService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="DeliveryRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcdelivery.service.DeliveryDetailInfoService</value>
+            </list>
+        </property>
+	</bean>
+
+    <bean id="deliveryScheduleService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="DeliveryRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcdelivery.service.DeliveryScheduleService</value>
+            </list>
+        </property>
+	</bean>
+
+	<bean id="flightTmcPriceService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="TmcPriceRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.sales.policy.service.FlightTmcPriceService</value>
+            </list>
+        </property>
+	</bean>
+	<bean id="orderAdapterServiceBtms" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.approval.adapter.service.OrderAdapterService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="newPointsService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.tmcportal.point.service.PointsService</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="reportAuthorityRoleService" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory" />
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.reportauthority.service.ReportAuthorityRoleService</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="bindingApprovalFlowManage" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.approval.manage.BindingApprovalFlowManage</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="departmentManager" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="BTMSRmiFactory"/>
+        <property name="targetMethod" value="getService"/>
+        <property name="arguments">
+            <list>
+                <value>com.mangocity.btms.organization.manager.DepartmentManager</value>
+            </list>
+        </property>
+    </bean>
+    
+    
+    
+</beans>

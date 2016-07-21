@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans          
+    http://www.springframework.org/schema/beans/spring-beans.xsd          
+    http://code.alibabatech.com/schema/dubbo          
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="mangocity-trainticket-service" />
+
+    <!-- <dubbo:registry address="${dubbo_registry_url}" /> -->
+    
+    <dubbo:registry  protocol="zookeeper" address="${dubbo_registry_production_url}" /> 
+
+    <dubbo:protocol name="dubbo" port="20880"/>
+  
+    <dubbo:provider delay="-1" timeout="50000" retries="1"/>
+    
+    <!-- 测试类 -->
+    <dubbo:service interface="com.mangocity.api.ITrainTicketService" ref="trainTicketService" />
+    
+    <bean id="trainTicketService" class="com.mangocity.service.TrainTicketServiceImpl" />
+    
+    <!-- 服务类 -->
+    <dubbo:service interface="com.mangocity.api.IChargeService" ref="chargeService" />
+    
+    <bean id="chargeService" class="com.mangocity.service.ChargeServiceImpl" />
+    
+    <dubbo:service interface="com.mangocity.api.ITrainOrderService" ref="orderService"/>
+
+    <!-- 支付类 -->
+    <dubbo:service interface="com.mangocity.api.ITrainPayService" ref="trainPayService" />
+
+    <bean id="orderService" class="com.mangocity.service.TrainOrderServiceImpl"/>
+
+    <bean id="trainPayService" class="com.mangocity.service.TrainPayServiceImpl" />
+    
+    <!-- 支付详情类 -->
+    <dubbo:service interface="com.mangocity.api.ITrainPayDetailService" ref="trainPayDetailService" />
+    
+    <bean id="trainPayDetailService" class="com.mangocity.service.TrainPayDetailServiceImpl" />
+    
+    <!-- 支付会话类 -->
+    <dubbo:service interface="com.mangocity.api.ITrainPayInfoService" ref="trainPayInfoService" />
+    
+    <bean id="trainPayInfoService" class="com.mangocity.service.TrainPayInfoServiceImpl" />
+    
+    <!-- 支付支付明细类 -->
+    <dubbo:service interface="com.mangocity.api.ITrainPayOrderItemService" ref="trainPayOrderItemService" />
+    
+    <bean id="trainPayOrderItemService" class="com.mangocity.service.TrainPayOrderItemServiceImpl" />
+    
+    <!-- 联系人明细类 -->
+    <dubbo:service interface="com.mangocity.api.IContactService" ref="contactService"></dubbo:service>
+    <bean id="contactService" class="com.mangocity.service.ContactServiceImpl"></bean>
+    
+
+    <dubbo:service interface="com.mangocity.api.IDeliverySevice" ref="deliveryService"/>
+    <bean id="deliveryService" class="com.mangocity.service.DeleveryServiceImpl"/>
+    
+    <!-- 采购 -->
+    <dubbo:service interface="com.mangocity.api.IPurchaseService" ref="purchaseService"/>
+    <bean id="purchaseService" class="com.mangocity.service.PurchaseServiceImpl"/>
+    
+    <!-- 审批服务-->
+    <bean id="approvalManageService" class="com.mangocity.btms.service.ApprovalManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IApprovalManageService" ref="approvalManageService"/>
+    
+    <!-- 公司合同服务-->
+    <bean id="contractManageService" class="com.mangocity.btms.service.ContractManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IContractManageService" ref="contractManageService"/>
+    
+    <!-- 公司信息服务-->
+    <bean id="corporationManageService" class="com.mangocity.btms.service.CorporationManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.ICorporationManageService" ref="corporationManageService"/>
+    
+    <!-- 成本中心服务-->
+    <bean id="costCenterManageService" class="com.mangocity.btms.service.CostCenterManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.ICostCenterManageService" ref="costCenterManageService"/>
+    
+    <!-- 部门信息服务-->
+    <bean id="departmentManageService" class="com.mangocity.btms.service.DepartmentManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IDepartmentManageService" ref="departmentManageService"/>
+    
+    <!-- 集团层级信息服务-->
+    <bean id="hierarchyArchitectureManageService" class="com.mangocity.btms.service.HierarchyArchitectureManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IHierarchyArchitectureManageService" ref="hierarchyArchitectureManageService"/>
+    
+    <!-- 集团公司配置信息服务-->
+    <bean id="organizationConfigurationManageService" class="com.mangocity.btms.service.OrganizationConfigurationManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IOrganizationConfigurationManageService" ref="organizationConfigurationManageService"/>
+    
+    <!-- 差旅管控服务-->
+    <bean id="policyManageService" class="com.mangocity.btms.service.PolicyManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IPolicyManageService" ref="policyManageService"/>
+    
+     <!-- 项目代码服务-->
+    <bean id="projectManageService" class="com.mangocity.btms.service.ProjectManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IProjectManageService" ref="projectManageService"/>
+    
+    <!-- 历史乘机人服务-->
+    <bean id="passengerManageService" class="com.mangocity.btms.service.PassengerManageServiceImpl">
+    	<property name="passengerService" ref="passengerService"></property>
+    </bean>
+    <dubbo:service interface="com.mangocity.btms.api.IPassengerManageService" ref="passengerManageService"/>
+    
+    <!-- 会员信息服务-->
+    <bean id="memberManageService" class="com.mangocity.btms.service.MemberManageServiceImpl">
+    	<property name="memberAdapterService" ref="memberAdapterService"></property>
+    </bean>
+    <dubbo:service interface="com.mangocity.btms.api.IMemberManageService" ref="memberManageService"/>
+    
+    <!-- 消息服务-->
+    <bean id="messageManageService" class="com.mangocity.btms.service.MessageManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IMessageManageService" ref="messageManageService"/>
+    
+    <!-- 消息模板服务-->
+    <bean id="messageTemplateService" class="com.mangocity.service.MessageTemplateServiceImpl"/>
+    <dubbo:service interface="com.mangocity.api.IMessageTemplateService" ref="messageTemplateService"/>
+    
+    <!-- 配送服务-->
+    <bean id="deliveryManageService" class="com.mangocity.btms.service.DeliveryManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IDeliveryManageService" ref="deliveryManageService"/>
+    
+    <!-- 审批消息服务-->
+    <bean id="approvalMessageManageService" class="com.mangocity.btms.service.ApprovalMessageManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IApprovalMessageManageService" ref="approvalMessageManageService"/>
+    
+    <!-- 地址服务-->
+    <bean id="addressManageService" class="com.mangocity.btms.service.AddressManageServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.IAddressManageService" ref="addressManageService"/>
+    
+    <!-- 12306账号维护服务 -->
+    <bean id="iAccountService" class="com.mangocity.service.AccountServiceImpl"/>
+    <dubbo:service interface="com.mangocity.api.IAccountService" ref="iAccountService"/>
+    
+    <bean id="frequentTravelsService" class="com.mangocity.service.FrequentTravellerServiceImpl"/>
+    <dubbo:service interface="com.mangocity.api.IFrequentTravellerService" ref="frequentTravelsService"/>
+    
+    <!-- 申请人明细类 -->
+    <dubbo:service interface="com.mangocity.api.IApplicantService" ref="applicantService"></dubbo:service>
+    <bean id="applicantService" class="com.mangocity.service.ApplicantServiceImpl"></bean>
+    
+    <!-- 积分类 -->
+    <dubbo:service interface="com.mangocity.btms.api.IPointsService" ref="pointsService"></dubbo:service>
+    <bean id="pointsService" class="com.mangocity.btms.service.PointsServiceImpl"></bean>
+    
+    <dubbo:service interface="com.mangocity.api.IPurchaseItemService" ref="purchaseItemService"></dubbo:service>
+    <bean id="purchaseItemService" class="com.mangocity.service.PurchaseItemServiceImpl"></bean>
+    
+    <dubbo:service interface="com.mangocity.api.IMessageReveiverService" ref="messageReveiverService"></dubbo:service>
+    <bean id="messageReveiverService" class="com.mangocity.service.MessageReceiverServiceImpl"></bean>
+    
+    <!-- 公司信息服务-->
+    <bean id="ducorporationService" class="com.mangocity.btms.service.CorporationServiceImpl"/>
+    <dubbo:service interface="com.mangocity.btms.api.ICorporationService" ref="ducorporationService"/>
+    
+</beans>

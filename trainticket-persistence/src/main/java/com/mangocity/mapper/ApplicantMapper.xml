@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.ApplicantMapper">
+
+	<resultMap type="Applicant" id="applicantToMap">
+		<result property="id" column="id"/>
+		<result property="name" column="name" />
+		<result property="telephone" column="telephone" />
+		<result property="telType" column="tel_type" />
+		<result property="mobile" column="mobile" />
+		<result property="operator" column="operator" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<insert id="save" parameterType="Applicant" keyProperty="id">
+		insert
+		into
+		t_train_applicant(name,telephone,tel_type,mobile,operator,create_time)
+		values(
+		#{name},
+		#{telephone},
+		#{telType},
+		#{mobile},
+		#{operator},
+		#{createTime})
+	</insert>
+
+	<select id="find" resultMap="applicantToMap">
+		select id,name,telephone,tel_type,mobile,operator,create_time from t_train_applicant where id = #{id}
+	</select>
+	
+	<delete id="delete" parameterType="Long">
+		delete from t_train_applicant
+		where id = #{id}
+	</delete>
+
+	<update id="update" parameterType="Applicant">
+		update t_train_applicant
+		<set>
+			<if test="name != '' and name != null">
+				name = #{name},
+			</if>
+			<if test="telephone != '' and telephone != null">
+				telephone = #{telephone},
+			</if>
+			<if test="telType != '' and telType != null">
+				tel_type = #{telType},
+			</if>
+			<if test="mobile != '' and mobile != null">
+				mobile = #{mobile},
+			</if>
+			<if test="operator != '' and operator != null">
+				operator = #{operator},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<select id="pageBySql" resultMap="applicantToMap">
+		select 
+		 id,name,telephone,tel_type,mobile,operator,create_time from t_train_applicant
+		LIMIT #{startNum}, #{pageSize}
+	</select>
+
+</mapper>

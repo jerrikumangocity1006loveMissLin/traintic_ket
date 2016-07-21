@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.ContactMapper">
+
+	<resultMap type="Contact" id="contactToMap">
+		<result property="id" column="id"/>
+		<result property="orderId" column="order_id" />
+		<result property="name" column="name" />
+		<result property="telephone" column="telephone" />
+		<result property="foreignMobile" column="foreign_mobile"/>
+		<result property="mail" column="mail" />
+		<result property="fax" column="fax"/>
+		<result property="isForeign" column="is_foreign"/>
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<insert id="save" parameterType="Contact" keyProperty="id">
+		insert
+		into
+		t_train_contact(order_id,name,telephone,foreign_mobile,mail,is_foreign,fax,create_time)
+		values(
+		#{orderId},
+		#{name},
+		#{telephone},
+		#{foreignMobile},
+		#{mail},
+		#{isForeign},
+		#{fax},
+		#{createTime})
+	</insert>
+
+	<select id="find" resultMap="contactToMap">
+		select id,order_id,name,telephone,foreign_mobile,mail,is_foreign,fax,create_time from t_train_contact where id = #{id}
+	</select>
+	
+	<select id="findContactByOrderId" resultMap="contactToMap">
+		select id,order_id,name,telephone,foreign_mobile,mail,fax,is_foreign,create_time from t_train_contact where order_id = #{orderId}
+	</select>
+
+	<delete id="delete" parameterType="Long">
+		delete from t_train_contact
+		where id = #{id}
+	</delete>
+
+	<update id="update" parameterType="Contact">
+		update t_train_contact
+		<set>
+			<if test="orderId != null">
+				order_id = #{orderId},
+			</if>
+			<if test="name != '' and name != null">
+				name = #{name},
+			</if>
+			<if test="telephone != '' and telephone != null">
+				telephone = #{telephone},
+			</if>
+			<if test="foreignMobile !='' and foreignMobile !=null ">
+			   foreign_mobile =#{foreignMobile},
+			</if>
+			<if test="mail != '' and mail != null">
+				mail = #{mail},
+			</if>
+			<if test="fax !='' and fax != null">
+			    fax =#{fax},
+			</if>
+			<if test="isForeign !='' and isForeign!=null ">
+			    is_foreign=#{isForeign},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime}
+			</if>
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<select id="pageBySql" resultMap="contactToMap">
+		select
+		id,order_id,name,telephone,mail,create_time from t_train_contact
+		LIMIT #{startNum}, #{pageSize}
+	</select>
+
+</mapper>

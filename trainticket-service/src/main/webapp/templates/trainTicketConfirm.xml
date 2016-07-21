@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="GB2312"?>
+<?xml-stylesheet type="text/xsl" href="trainTicketConfirm.xsl"?> 
+<trainTicketConfirm>
+	<url>$itm.url$</url>
+	<orderCn>$itm.orderCn$</orderCn><!-- 订单 -->
+	<ticketList>
+	   <ticket>
+	      <no>$itm.no$</no>
+	      <name>$itm.name$</name>
+	      <train>$itm.trainCn$</train>
+	      <date>$itm.startDate$</date>
+	      <origStationName>$itm.origStationName$</origStationName>
+	      <startTime>$itm.startTime$</startTime>
+	      <destStationName>$itm.destStationName$</destStationName>
+	      <endTime>$itm.endTime$</endTime>
+	      <seat>$itm.seatType$</seat>
+	      <price>$itm.price$</price>
+	      <serviceCharge>$itm.fee$</serviceCharge>
+	   </ticket>
+	</ticketList>
+	<allPrice>$itm.allPrice$</allPrice>
+</trainTicketConfirm>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.mapper.FrequentTravellerMapper">
+   <resultMap type="FrequentTraveller" id="FrequentTravellerMap">
+       <result column="id" property="id"/>
+       <result column="account_id" property="accountId"/>
+       <result column="name" property="name"/>
+       <result column="phone" property="phone"/>
+       <result column="certificate_type" property="certificateType"/>
+       <result column="certificate" property="certificate"/>
+       <result column="sex" property="sex"/>
+   </resultMap>
+   
+   <resultMap type="com.mangocity.vo.FrequentTravellerVo" id="FrequentTravellerVoMap">
+       <result column="id" property="id"/>
+       <result column="account_id" property="accountId"/>
+       <result column="name" property="name"/>
+       <result column="phone" property="phone"/>
+       <result column="certificate_type" property="certificateType"/>
+       <result column="certificate" property="certificate"/>
+       <result column="sex" property="sex"/>
+       <result column="userName" property="userName"/>
+       <result column="password" property="password"/>
+   </resultMap>
+   
+   <select id="find" resultMap="FrequentTravellerMap">
+      select id,account_id,name,phone,certificate_type,certificate,sex from t_train_frequent_traveller
+      where id=#{id}
+   </select>
+
+   <insert id="save" parameterType="FrequentTraveller" keyProperty="id" useGeneratedKeys="true">
+      insert into t_train_frequent_traveller(account_id,name,phone,certificate_type,certificate,sex)
+      values(#{accountId},#{name},#{phone},#{certificateType},#{certificate},#{sex})
+   </insert>
+   
+   <update id="update" parameterType="FrequentTraveller">
+      update t_train_frequent_traveller set account_id=#{accountId},name=#{name},phone=#{phone},
+        cetificate_type=#{certificateType},sex=#{sex}
+        where id=#{id}
+   </update>
+   
+   <delete id="delete" parameterType="Long">
+     delete from t_train_frequent_traveller where id=#{id}
+   </delete>
+   
+   <select id="pageBySql" resultMap="FrequentTravellerMap">
+      select id,account_id,name,phone,certificate_type,certificate,sex from t_train_frequent_traveller
+       limit #{startNum}, #{pageSize}
+   </select>
+   
+   <select id="queryFrequentTravellerByCertificate" parameterType="java.lang.String" resultMap="FrequentTravellerVoMap">
+      select account,password,account_id from t_train_frequent_traveller a
+        left join t_train_account
+        on a.account_id = b.id
+      where a.certificate=#{certificate}
+   </select>
+   
+   <select id="queryTop5CandidateAccounts" resultMap="FrequentTravellerVoMap">
+	SELECT COUNT(0) numberOfTraveller,a.account_id,b.account,b.`password` FROM t_train_frequent_traveller a LEFT JOIN t_train_account b
+	ON a.account_id = b.id
+	GROUP BY a.account_id
+	HAVING numberOfTraveller<![CDATA[ < ]]>15
+	ORDER BY numberofTraveller
+	DESC
+	LIMIT 0,5
+   </select>
+   
+  <delete id="deleteTravellerByAccountId" parameterType="Long">
+     delete from t_train_frequent_traveller where account_id = #{accountId}
+  </delete>
+   
+</mapper>

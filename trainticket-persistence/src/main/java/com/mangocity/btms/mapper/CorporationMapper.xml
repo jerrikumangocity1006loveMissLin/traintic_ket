@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mangocity.btms.mapper.CorporationMapper">
+   <resultMap type="Corporation" id="CorporationMap">
+       <result column="CORPORATION_ID" property="corporationId"/>
+       <result column="CORPORATION_SN" property="corporationSn"/>
+       <result column="ZH_NAME" property="zhName"/>
+       <result column="EN_NAME" property="enName"/>
+       <result column="CORPORATION" property="corporation"/>
+       <result column="GENERAL_MGR_NAME" property="generalMgrName"/>
+       <result column="WEBSITE" property="webSite"/>
+       <result column="LOGO_URL" property="logoUrl"/>
+       <result column="REG_CAPITAL" property="regCapital"/>
+       <result column="CURRENCY" property="currency"/>
+       <result column="CERT_TYPE" property="certType"/>
+       <result column="CERT_NO" property="certNO"/>
+       <result column="CORPORATION_TYPE" property="corporationType"/>
+       <result column="CORPORATION_NUM" property="corporationNum"/>
+       <result column="CORPORATION_CODE" property="corporationCode"/>
+       <result column="CONTACTS" property="contacts"/>
+       <result column="REMARK" property="remark"/>
+       <result column="INDUSTRY_CODE" property="industryCode"/>
+   </resultMap>
+   
+   <select id="findCorporationByMbrCd" resultMap="CorporationMap">
+      select c.CORPORATION_ID,c.CORPORATION_SN,c.ZH_NAME,c.EN_NAME,c.EN_NAME,c.CORPORATION,c.GENERAL_MGR_NAME,c.WEBSITE,
+      c.LOGO_URL,c.REG_CAPITAL,c.CURRENCY,c.CERT_TYPE,c.CERT_NO,c.CORPORATION_TYPE,c.CORPORATION_NUM,c.CORPORATION_CODE,
+      c.CONTACTS,c.REMARK,c.INDUSTRY_CODE from mbr.T_MBR_MBRSHIP a,mbr.T_MBR_MBRSHIP_TMC b,mbr.t_mbr_biz_corporation c 
+      where a.mbrship_cd=#{mbrcd} and a.mbrship_id=b.mbrship_id and b.corporation_id=c.corporation_id
+   </select>
+
+   <select id="findCorporationByCorporationId" resultMap="CorporationMap">
+      select c.CORPORATION_ID,c.CORPORATION_SN,c.ZH_NAME,c.EN_NAME,c.EN_NAME,c.CORPORATION,c.GENERAL_MGR_NAME,c.WEBSITE,
+      c.LOGO_URL,c.REG_CAPITAL,c.CURRENCY,c.CERT_TYPE,c.CERT_NO,c.CORPORATION_TYPE,c.CORPORATION_NUM,c.CORPORATION_CODE,
+      c.CONTACTS,c.REMARK,c.INDUSTRY_CODE from mbr.t_mbr_biz_corporation c where c.corporation_id = #{corporationId}
+   </select>
+   
+   <select id="findCorporationByNumOrCode" resultMap="CorporationMap">
+      select c.CORPORATION_ID,c.CORPORATION_SN,c.ZH_NAME,c.EN_NAME,c.EN_NAME,c.CORPORATION,c.GENERAL_MGR_NAME,c.WEBSITE,
+      c.LOGO_URL,c.REG_CAPITAL,c.CURRENCY,c.CERT_TYPE,c.CERT_NO,c.CORPORATION_TYPE,c.CORPORATION_NUM,c.CORPORATION_CODE,
+      c.CONTACTS,c.REMARK,c.INDUSTRY_CODE from mbr.t_mbr_biz_corporation c where 
+      <if test="corporationCode !=null and corporationCode != ''">
+      	c.corporation_code = #{corporationCode}
+      </if>
+      <if test="corporationNum != null and corporationNum != ''">
+      	and c.corporation_num = #{corporationNum}
+      </if>
+       
+   </select>
+     
+</mapper>
